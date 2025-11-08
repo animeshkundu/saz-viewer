@@ -205,14 +205,14 @@ export function SessionGrid({
         <div className="flex gap-2">
           <div className="relative flex-1">
             <MagnifyingGlass 
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" 
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" 
               size={14}
             />
             <Input
               placeholder="Filter..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-8 pl-8 text-xs bg-background/50"
+              className="h-8 pl-9 pr-3 text-xs bg-background/50"
             />
           </div>
           
@@ -231,15 +231,15 @@ export function SessionGrid({
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuLabel className="text-xs">Filter by Method</DropdownMenuLabel>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuLabel className="text-xs font-semibold px-3 py-2">Filter by Method</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {allMethods.map((method) => (
                 <DropdownMenuCheckboxItem
                   key={method}
                   checked={methodFilters.has(method)}
                   onCheckedChange={() => toggleMethodFilter(method)}
-                  className="text-xs"
+                  className="text-xs py-2 pl-9 pr-3"
                 >
                   {method}
                 </DropdownMenuCheckboxItem>
