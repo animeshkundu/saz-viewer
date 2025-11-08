@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -24,6 +24,13 @@ interface SessionGridProps {
 type SortField = 'id' | 'status' | 'method' | 'url'
 type SortDirection = 'asc' | 'desc'
 
+interface ColumnWidths {
+  id: number
+  status: number
+  method: number
+  url: number
+}
+
 export function SessionGrid({
   sessions,
   sessionOrder,
@@ -35,6 +42,14 @@ export function SessionGrid({
   const [sortField, setSortField] = useState<SortField>('id')
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const activeRowRef = useRef<HTMLTableRowElement>(null)
+  
+  const [columnWidths, setColumnWidths] = useState<ColumnWidths>({
+    id: 60,
+    status: 80,
+    method: 100,
+    url: 400,
+  })
+  const [resizing, setResizing] = useState<{ column: keyof ColumnWidths; startX: number; startWidth: number } | null>(null)
 
   useEffect(() => {
     if (activeRowRef.current) {
@@ -44,6 +59,40 @@ export function SessionGrid({
       })
     }
   }, [activeSessionId])
+
+  const handleMouseDown = useCallback((column: keyof ColumnWidths, e: React.MouseEvent) => {
+    e.preventDefault()
+    setResizing({
+      column,
+      startX: e.clientX,
+      startWidth: columnWidths[column],
+    })
+  }, [columnWidths])
+
+  useEffect(() => {
+    if (!resizing) return
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const diff = e.clientX - resizing.startX
+      const newWidth = Math.max(40, resizing.startWidth + diff)
+      setColumnWidths(prev => ({
+        ...prev,
+        [resizing.column]: newWidth,
+      }))
+    }
+
+    const handleMouseUp = () => {
+      setResizing(null)
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [resizing])
 
   const allMethods = Array.from(new Set(
     Array.from(sessions.values()).map(s => s.method.toUpperCase())
@@ -172,11 +221,11 @@ export function SessionGrid({
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="h-8 gap-1.5 shrink-0"
+                className="h-8 gap-1.5 px-2.5 shrink-0"
               >
-                <FunnelSimple size={14} />
+                <FunnelSimple size={14} weight="bold" />
                 {methodFilters.size > 0 && (
-                  <Badge variant="secondary" className="h-4 px-1 text-[10px] ml-0.5">
+                  <Badge variant="secondary" className="h-4 px-1 text-[10px]">
                     {methodFilters.size}
                   </Badge>
                 )}
@@ -202,32 +251,52 @@ export function SessionGrid({
 
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
-          <table className="w-full border-collapse">
+          <table className="w-full border-collapse" style={{ tableLayout: 'fixed' }}>
             <thead className="sticky top-0 z-10 bg-muted/30 border-b border-border">
               <tr>
                 <th 
-                  className="text-left px-3 py-2 text-[11px] font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none w-[60px]"
+                  style={{ width: `${columnWidths.id}px` }}
+                  className="relative text-left px-3 py-2 text-[11px] font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none"
                   onClick={() => handleSort('id')}
                 >
                   #<SortIcon field="id" />
+                  <div
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-accent/50 active:bg-accent"
+                    onMouseDown={(e) => handleMouseDown('id', e)}
+                  />
                 </th>
                 <th 
-                  className="text-left px-3 py-2 text-[11px] font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none w-[80px]"
+                  style={{ width: `${columnWidths.status}px` }}
+                  className="relative text-left px-3 py-2 text-[11px] font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none"
                   onClick={() => handleSort('status')}
                 >
                   Status<SortIcon field="status" />
+                  <div
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-accent/50 active:bg-accent"
+                    onMouseDown={(e) => handleMouseDown('status', e)}
+                  />
                 </th>
                 <th 
-                  className="text-left px-3 py-2 text-[11px] font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none w-[100px]"
+                  style={{ width: `${columnWidths.method}px` }}
+                  className="relative text-left px-3 py-2 text-[11px] font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none"
                   onClick={() => handleSort('method')}
                 >
                   Method<SortIcon field="method" />
+                  <div
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-accent/50 active:bg-accent"
+                    onMouseDown={(e) => handleMouseDown('method', e)}
+                  />
                 </th>
                 <th 
-                  className="text-left px-3 py-2 text-[11px] font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none"
+                  style={{ width: `${columnWidths.url}px` }}
+                  className="relative text-left px-3 py-2 text-[11px] font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none"
                   onClick={() => handleSort('url')}
                 >
                   URL<SortIcon field="url" />
+                  <div
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-accent/50 active:bg-accent"
+                    onMouseDown={(e) => handleMouseDown('url', e)}
+                  />
                 </th>
               </tr>
             </thead>
@@ -252,16 +321,28 @@ export function SessionGrid({
                       }
                     `}
                   >
-                    <td className="px-3 py-2.5 text-[11px] font-mono text-muted-foreground tabular-nums">
+                    <td 
+                      style={{ width: `${columnWidths.id}px` }}
+                      className="px-3 py-2.5 text-[11px] font-mono text-muted-foreground tabular-nums"
+                    >
                       {id}
                     </td>
-                    <td className={`px-3 py-2.5 text-[11px] font-mono font-bold tabular-nums ${getStatusCodeColor(session.response.statusCode)}`}>
+                    <td 
+                      style={{ width: `${columnWidths.status}px` }}
+                      className={`px-3 py-2.5 text-[11px] font-mono font-bold tabular-nums ${getStatusCodeColor(session.response.statusCode)}`}
+                    >
                       {session.response.statusCode}
                     </td>
-                    <td className={`px-3 py-2.5 text-[11px] font-bold ${getMethodColor(session.method)}`}>
+                    <td 
+                      style={{ width: `${columnWidths.method}px` }}
+                      className={`px-3 py-2.5 text-[11px] font-bold ${getMethodColor(session.method)}`}
+                    >
                       {session.method}
                     </td>
-                    <td className="px-3 py-2.5 text-[11px] font-mono text-foreground/90 truncate max-w-0">
+                    <td 
+                      style={{ width: `${columnWidths.url}px` }}
+                      className="px-3 py-2.5 text-[11px] font-mono text-foreground/90 truncate"
+                    >
                       {session.url}
                     </td>
                   </tr>

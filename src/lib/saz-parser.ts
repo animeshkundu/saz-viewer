@@ -46,8 +46,7 @@ export class SazParserService {
       const request = HttpParserUtil.parseRequest(rawClient)
       const response = HttpParserUtil.parseResponse(rawServer)
 
-      const urlParts = request.url.split(' ')
-      const url = urlParts[0] || '/'
+      const url = request.url
       const host = request.headers.get('host') || ''
       const fullUrl = host ? `https://${host}${url}` : url
 
