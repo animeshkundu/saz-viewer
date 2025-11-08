@@ -85,23 +85,23 @@ export function InspectorPanel({ message, rawMessage, title }: InspectorPanelPro
   }
 
   return (
-    <Card className="h-full flex flex-col">
-      <div className="p-4 border-b">
-        <h3 className="font-medium text-sm">{title}</h3>
+    <div className="h-full flex flex-col bg-card border rounded-lg overflow-hidden">
+      <div className="px-4 py-3 border-b bg-muted/30">
+        <h3 className="font-semibold text-sm">{title}</h3>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-        <TabsList className="w-full justify-start rounded-none border-b bg-transparent h-auto p-0">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
+        <TabsList className="w-full justify-start rounded-none border-b bg-transparent h-auto p-0 gap-1">
           <TabsTrigger
             value="headers"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent gap-2"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 gap-2 px-4"
           >
             <ListBullets size={16} />
             Headers
           </TabsTrigger>
           <TabsTrigger
             value="raw"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent gap-2"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 gap-2 px-4"
           >
             <Code size={16} />
             Raw
@@ -109,7 +109,7 @@ export function InspectorPanel({ message, rawMessage, title }: InspectorPanelPro
           {shouldShowTab('json') && (
             <TabsTrigger
               value="json"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 px-4"
             >
               JSON
             </TabsTrigger>
@@ -117,7 +117,7 @@ export function InspectorPanel({ message, rawMessage, title }: InspectorPanelPro
           {shouldShowTab('xml') && (
             <TabsTrigger
               value="xml"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 px-4"
             >
               XML
             </TabsTrigger>
@@ -125,7 +125,7 @@ export function InspectorPanel({ message, rawMessage, title }: InspectorPanelPro
           {shouldShowTab('hexview') && (
             <TabsTrigger
               value="hexview"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 px-4"
             >
               HexView
             </TabsTrigger>
@@ -139,8 +139,8 @@ export function InspectorPanel({ message, rawMessage, title }: InspectorPanelPro
                 <Table>
                   <TableBody>
                     {Array.from(message.headers.entries()).map(([key, value]) => (
-                      <TableRow key={key}>
-                        <TableCell className="font-mono text-xs font-medium w-1/3">
+                      <TableRow key={key} className="hover:bg-muted/30">
+                        <TableCell className="font-mono text-xs font-semibold w-1/3 text-foreground/90">
                           {key}
                         </TableCell>
                         <TableCell className="font-mono text-xs text-muted-foreground">
@@ -156,7 +156,7 @@ export function InspectorPanel({ message, rawMessage, title }: InspectorPanelPro
 
           <TabsContent value="raw" className="h-full m-0 p-0">
             <ScrollArea className="h-full">
-              <pre className="p-4 text-xs font-mono whitespace-pre-wrap break-all">
+              <pre className="p-4 text-xs font-mono whitespace-pre-wrap break-all text-foreground/80 leading-relaxed">
                 {rawMessage}
               </pre>
             </ScrollArea>
@@ -166,7 +166,7 @@ export function InspectorPanel({ message, rawMessage, title }: InspectorPanelPro
             <TabsContent value="json" className="h-full m-0 p-0">
               <ScrollArea className="h-full">
                 <pre
-                  className="p-4 text-xs font-mono"
+                  className="p-4 text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html: SyntaxUtil.highlight(formatJson(message.rawBody), 'json'),
                   }}
@@ -179,7 +179,7 @@ export function InspectorPanel({ message, rawMessage, title }: InspectorPanelPro
             <TabsContent value="xml" className="h-full m-0 p-0">
               <ScrollArea className="h-full">
                 <pre
-                  className="p-4 text-xs font-mono"
+                  className="p-4 text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html: SyntaxUtil.highlight(message.rawBody, 'xml'),
                   }}
@@ -197,6 +197,6 @@ export function InspectorPanel({ message, rawMessage, title }: InspectorPanelPro
           )}
         </div>
       </Tabs>
-    </Card>
+    </div>
   )
 }

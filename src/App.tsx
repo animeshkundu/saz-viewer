@@ -6,6 +6,13 @@ import { SazParserService } from '@/lib/saz-parser'
 import type { SazArchive } from '@/lib/types'
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from 'sonner'
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from '@/components/ui/resizable'
+import { Button } from '@/components/ui/button'
+import { ArrowCounterClockwise } from '@phosphor-icons/react'
 
 function App() {
   const [isLoading, setIsLoading] = useState(false)
@@ -67,50 +74,71 @@ function App() {
   return (
     <>
       <div className="h-screen w-screen bg-background flex flex-col">
-        <header className="border-b bg-card px-6 py-4">
+        <header className="border-b bg-card px-6 py-4 shrink-0">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold">SAZ Viewer</h1>
-            <button
+            <div className="flex items-center gap-3">
+              <h1 className="text-xl font-semibold">SAZ Viewer</h1>
+              <span className="text-xs text-muted-foreground">
+                {sazArchive.sessionOrder.length} sessions
+              </span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 setSazArchive(null)
                 setActiveSessionId(null)
                 setError(null)
               }}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="gap-2"
             >
+              <ArrowCounterClockwise size={16} />
               Load Different File
-            </button>
+            </Button>
           </div>
         </header>
 
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[350px_1fr] overflow-hidden">
-          <SessionList
-            sessions={sazArchive.sessions}
-            sessionOrder={sazArchive.sessionOrder}
-            activeSessionId={activeSessionId}
-            onSessionSelected={handleSessionSelected}
-          />
+        <div className="flex-1 overflow-hidden">
+          <ResizablePanelGroup direction="horizontal">
+            <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
+              <SessionList
+                sessions={sazArchive.sessions}
+                sessionOrder={sazArchive.sessionOrder}
+                activeSessionId={activeSessionId}
+                onSessionSelected={handleSessionSelected}
+              />
+            </ResizablePanel>
 
-          <div className="overflow-hidden">
-            {activeSession ? (
-              <div className="h-full grid grid-rows-2 gap-4 p-4">
-                <InspectorPanel
-                  message={activeSession.request}
-                  rawMessage={activeSession.rawClient}
-                  title="Request"
-                />
-                <InspectorPanel
-                  message={activeSession.response}
-                  rawMessage={activeSession.rawServer}
-                  title="Response"
-                />
-              </div>
-            ) : (
-              <div className="h-full flex items-center justify-center text-muted-foreground">
-                Select a session to view details
-              </div>
-            )}
-          </div>
+            <ResizableHandle withHandle />
+
+            <ResizablePanel defaultSize={75} minSize={30}>
+              {activeSession ? (
+                <ResizablePanelGroup direction="vertical">
+                  <ResizablePanel defaultSize={50} minSize={20}>
+                    <InspectorPanel
+                      message={activeSession.request}
+                      rawMessage={activeSession.rawClient}
+                      title="Request"
+                    />
+                  </ResizablePanel>
+
+                  <ResizableHandle withHandle />
+
+                  <ResizablePanel defaultSize={50} minSize={20}>
+                    <InspectorPanel
+                      message={activeSession.response}
+                      rawMessage={activeSession.rawServer}
+                      title="Response"
+                    />
+                  </ResizablePanel>
+                </ResizablePanelGroup>
+              ) : (
+                <div className="h-full flex items-center justify-center text-muted-foreground">
+                  Select a session to view details
+                </div>
+              )}
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </div>
       </div>
       <Toaster />
