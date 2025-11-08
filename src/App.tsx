@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { FileDropZone } from '@/components/FileDropZone'
 import { SessionList } from '@/components/SessionList'
 import { InspectorPanel } from '@/components/InspectorPanel'
+import { KeyboardShortcuts } from '@/components/KeyboardShortcuts'
 import { SazParserService } from '@/lib/saz-parser'
 import type { SazArchive } from '@/lib/types'
 import { Toaster } from '@/components/ui/sonner'
@@ -12,6 +13,7 @@ import {
   ResizableHandle,
 } from '@/components/ui/resizable'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { ArrowCounterClockwise } from '@phosphor-icons/react'
 
 function App() {
@@ -52,6 +54,21 @@ function App() {
     setActiveSessionId(sessionId)
   }
 
+  const navigateSession = (direction: 'up' | 'down') => {
+    if (!sazArchive || !activeSessionId) return
+    
+    const currentIndex = sazArchive.sessionOrder.indexOf(activeSessionId)
+    if (currentIndex === -1) return
+    
+    const nextIndex = direction === 'up' 
+      ? Math.max(0, currentIndex - 1)
+      : Math.min(sazArchive.sessionOrder.length - 1, currentIndex + 1)
+    
+    if (nextIndex !== currentIndex) {
+      setActiveSessionId(sazArchive.sessionOrder[nextIndex])
+    }
+  }
+
   if (!sazArchive) {
     return (
       <>
@@ -74,13 +91,19 @@ function App() {
   return (
     <>
       <div className="h-screen w-screen bg-background flex flex-col">
-        <header className="border-b bg-card px-6 py-4 shrink-0">
+        <header className="border-b bg-card px-6 py-3 shrink-0 shadow-sm">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-semibold">SAZ Viewer</h1>
-              <span className="text-xs text-muted-foreground">
-                {sazArchive.sessionOrder.length} sessions
-              </span>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+                  <span className="text-accent font-bold text-sm">SAZ</span>
+                </div>
+                <h1 className="text-lg font-semibold">SAZ Viewer</h1>
+              </div>
+              <div className="h-4 w-px bg-border" />
+              <Badge variant="secondary" className="text-xs font-medium tabular-nums">
+                {sazArchive.sessionOrder.length} {sazArchive.sessionOrder.length === 1 ? 'session' : 'sessions'}
+              </Badge>
             </div>
             <Button
               variant="ghost"
@@ -109,7 +132,7 @@ function App() {
               />
             </ResizablePanel>
 
-            <ResizableHandle withHandle />
+            <ResizableHandle withHandle className="w-1 bg-border/50 hover:bg-accent/30 transition-colors" />
 
             <ResizablePanel defaultSize={75} minSize={30}>
               {activeSession ? (
@@ -122,7 +145,7 @@ function App() {
                     />
                   </ResizablePanel>
 
-                  <ResizableHandle withHandle />
+                  <ResizableHandle withHandle className="h-1 bg-border/50 hover:bg-accent/30 transition-colors" />
 
                   <ResizablePanel defaultSize={50} minSize={20}>
                     <InspectorPanel
@@ -133,14 +156,21 @@ function App() {
                   </ResizablePanel>
                 </ResizablePanelGroup>
               ) : (
-                <div className="h-full flex items-center justify-center text-muted-foreground">
-                  Select a session to view details
+                <div className="h-full flex items-center justify-center text-center p-8">
+                  <div className="space-y-2">
+                    <p className="text-muted-foreground text-sm">Select a session to view details</p>
+                    <p className="text-muted-foreground/60 text-xs">Request and response data will appear here</p>
+                  </div>
                 </div>
               )}
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
       </div>
+      <KeyboardShortcuts
+        onNavigateUp={() => navigateSession('up')}
+        onNavigateDown={() => navigateSession('down')}
+      />
       <Toaster />
     </>
   )
