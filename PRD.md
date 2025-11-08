@@ -13,25 +13,25 @@ A 100% client-side, serverless web application enabling macOS, Linux, and Window
 ## Essential Features
 
 **File Loading (Drag & Drop / File Picker)**
-- Functionality: Accept .saz files via drag-drop zone or file input button, validate file type and SAZ structure
-- Purpose: Provide frictionless entry point that works across all platforms and enterprise environments
-- Trigger: User drags .saz file over drop zone or clicks "Load SAZ File" button
-- Progression: Hover feedback → Drop → Loading state → Session list populated → Drop zone hidden
-- Success criteria: Valid .saz files parse within 2 seconds; invalid files show specific error messages without breaking UI
+- Functionality: Accept .saz files via drag-drop zone or "Load New File" button in global header, validate file type and SAZ structure
+- Purpose: Provide frictionless entry point that works across all platforms; global header button enables loading new files without losing current context
+- Trigger: User drags .saz file over drop zone or clicks "Load New File" in header
+- Progression: Hover feedback → Drop → Loading state → Session grid populated → Three-pane layout displayed
+- Success criteria: Valid .saz files parse within 2 seconds; invalid files show specific error messages; "Load New File" button persistently available in global header
 
 **Session List Display**
-- Functionality: Scrollable list showing all HTTP sessions with ID, method, URL, and status code for quick scanning
-- Purpose: Enable rapid location of target requests (e.g., "find the 500 error") without opening each session
+- Functionality: Professional data grid with sortable columns (#, Status, Method, URL), search filtering, and method filtering for rapid session location
+- Purpose: Enable rapid location of target requests (e.g., "find all 404 errors") by sorting status codes or filtering by HTTP method without manual scanning
 - Trigger: SAZ file successfully parsed
-- Progression: Parse complete → Sessions sorted numerically → List renders → User scans for target session
-- Success criteria: List displays 100+ sessions without performance degradation; active session visually highlighted
+- Progression: Parse complete → Sessions display in grid → User sorts by status/method/URL → Clicks row to inspect → Request/Response panels update
+- Success criteria: Grid displays 1000+ sessions without performance degradation; sorting is instant; active session visually highlighted; columns are clearly labeled and aligned
 
 **Session Inspector with Auto-Detection**
-- Functionality: Multi-tab inspector (Raw/Headers/JSON/XML/HexView) that auto-selects appropriate tab based on Content-Type
-- Purpose: Eliminate manual tab hunting; immediately show JSON responses in formatted view, binary content in hex view
-- Trigger: User clicks session in list
-- Progression: Click session → Parse headers → Detect content type → Auto-select inspector tab → Display formatted content
-- Success criteria: JSON/XML auto-formatted with syntax highlighting; binary content renders in standard hex editor format; raw view always available
+- Functionality: Multi-tab inspector (Headers/Raw/JSON/XML/HexView) that auto-selects appropriate tab based on Content-Type; Response panel shows status code and size in header
+- Purpose: Eliminate manual tab hunting; immediately show JSON responses in formatted view, binary content in hex view; provide at-a-glance response metadata
+- Trigger: User clicks session in grid
+- Progression: Click session → Parse headers → Detect content type → Auto-select inspector tab → Display formatted content with status/size visible
+- Success criteria: JSON/XML auto-formatted with syntax highlighting; binary content renders in hex view; response header shows "Status: 404 Not Found | Size: 391 B"; headers display in clean two-column table
 
 ## Edge Case Handling
 
@@ -79,38 +79,49 @@ Minimal, functional animations that confirm interactions without delaying workfl
 ## Component Selection
 
 - **Components**:
-  - `Card` - Session list and inspector panels with subtle borders for visual separation
-  - `Tabs` - Inspector tab navigation (Raw/Headers/JSON/XML/HexView) with custom Tailwind active state using accent color
-  - `ScrollArea` - Session list and inspector content for clean overflow handling
-  - `Button` - File picker trigger with ghost variant for minimal visual weight
+  - `Card` - Session grid and inspector panels with subtle borders for visual separation
+  - `Tabs` - Inspector tab navigation (Headers/Raw/JSON/XML/Hex) with custom Tailwind active state using accent color
+  - `ScrollArea` - Session grid and inspector content for clean overflow handling
+  - `Button` - Global header "Load New File" action and filter dropdown trigger
   - `Alert` - Error message display with destructive variant for file validation failures
-  - `Table` - Headers display in key-value format with alternating row backgrounds for scannability
+  - `Table` - Session grid with sortable column headers; Headers display in key-value format for scannability
+  - `Input` - Search filter in session grid header
+  - `DropdownMenu` - Method filter with checkbox items for multi-select filtering
+  - `ResizablePanel` - Three-pane layout with adjustable panel sizes
   
 - **Customizations**:
   - Custom `FileDropZone` component with dashed border and hover state for drag-over feedback
+  - Custom `SessionGrid` component with sortable columns, search, and method filtering
   - Custom `HexView` component rendering address/bytes/ASCII in monospaced grid layout
   - Custom `SyntaxHighlighter` wrapper around highlight.js with theme matching color scheme
   
 - **States**:
   - Buttons: Subtle hover brightness increase (hover:brightness-110), active state with slight scale (active:scale-98)
-  - Session list items: Hover background (hover:bg-muted), active session with accent background (bg-accent/10 border-l-accent)
-  - Inspector tabs: Active tab with accent underline (border-b-accent), inactive tabs muted (text-muted-foreground)
+  - Session grid rows: Hover background (hover:bg-muted/40), active session with accent background (bg-accent/15)
+  - Inspector tabs: Active tab with accent bottom border (border-b-accent), inactive tabs muted (text-muted-foreground)
+  - Column headers: Hover state for sortable columns with sort direction indicator (caret up/down)
   
 - **Icon Selection**:
-  - `UploadSimple` - File picker button (conveys upload action without actual upload)
+  - `FolderOpen` - Global "Load New File" button
   - `FileArchive` - SAZ file type indicator in drop zone
   - `Warning` - Error message alerts
-  - `Code` - Raw tab icon
+  - `Code` - Raw/JSON tab icons
   - `ListBullets` - Headers tab icon
+  - `FileMagnifyingGlass` - Hex tab icon
+  - `MagnifyingGlass` - Search input icon
+  - `FunnelSimple` - Method filter dropdown icon
+  - `CaretUp/CaretDown` - Sort direction indicators in grid headers
   
 - **Spacing**:
-  - Panel padding: p-6 for main containers, p-4 for nested content
-  - Session list gap: gap-0.5 for tight vertical rhythm enabling more sessions visible
+  - Global header: px-6 py-2.5 for compact, persistent top bar
+  - Panel padding: p-4 for main containers, p-3 for panel headers
+  - Session grid: Tight row spacing for information density; px-3 py-2.5 for cells
   - Inspector content padding: p-4 for code blocks with breathing room
-  - Grid gaps: gap-4 for major layout divisions (session list | inspector split)
+  - Grid gaps: Resizable panels with 1px handles for precise layout control
   
 - **Mobile**:
-  - Vertical stack layout on <768px: Drop zone → Session list → Inspector (full width, collapsible sections)
-  - Session list becomes fixed-height scrollable panel (max-h-64) to ensure inspector remains above fold
-  - Tabs switch to compact icon-only view on mobile with tooltips for labels
-  - Hex view switches to single-column (address + bytes only) on narrow screens, ASCII column hidden
+  - Vertical stack layout on <768px: Global header → Session grid → Request panel → Response panel (full width stacked)
+  - Session grid becomes fixed-height scrollable panel (max-h-80) to ensure inspectors remain accessible
+  - Grid columns collapse: Show only # and URL columns on narrow screens; status/method visible on row tap
+  - Tabs switch to scrollable horizontal list on mobile
+  - Hex view switches to single-column (address + bytes only), ASCII column hidden

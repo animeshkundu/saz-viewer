@@ -16,9 +16,11 @@ interface InspectorPanelProps {
   message: ParsedMessage
   rawMessage: string
   title: string
+  statusCode?: number
+  statusText?: string
 }
 
-export function InspectorPanel({ message, rawMessage, title }: InspectorPanelProps) {
+export function InspectorPanel({ message, rawMessage, title, statusCode, statusText }: InspectorPanelProps) {
   const contentType = message.headers.get('content-type') || ''
   const contentLength = message.headers.get('content-length') || message.bodyAsArrayBuffer.byteLength
   const [activeTab, setActiveTab] = useState<string>('headers')
@@ -95,15 +97,30 @@ export function InspectorPanel({ message, rawMessage, title }: InspectorPanelPro
     return `${(num / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`
   }
 
+  const getStatusCodeColor = (statusCode: number): string => {
+    if (statusCode >= 200 && statusCode < 300) return 'text-emerald-600 dark:text-emerald-400'
+    if (statusCode >= 300 && statusCode < 400) return 'text-blue-600 dark:text-blue-400'
+    if (statusCode >= 400 && statusCode < 500) return 'text-orange-600 dark:text-orange-400'
+    if (statusCode >= 500) return 'text-red-600 dark:text-red-400'
+    return 'text-muted-foreground'
+  }
+
   return (
     <div className="h-full flex flex-col bg-background">
       <div className="px-4 py-2.5 border-b bg-muted/20 flex items-center justify-between">
         <h3 className="font-semibold text-sm text-foreground">{title}</h3>
-        {contentLength && (
-          <Badge variant="secondary" className="text-[10px] font-mono tabular-nums">
-            {formatBytes(contentLength)}
-          </Badge>
-        )}
+        <div className="flex items-center gap-3">
+          {statusCode !== undefined && (
+            <span className={`text-[11px] font-mono font-bold ${getStatusCodeColor(statusCode)}`}>
+              Status: {statusCode} {statusText}
+            </span>
+          )}
+          {contentLength && (
+            <span className="text-[11px] font-mono text-muted-foreground">
+              Size: {formatBytes(contentLength)}
+            </span>
+          )}
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">

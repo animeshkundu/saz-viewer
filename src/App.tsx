@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FileDropZone } from '@/components/FileDropZone'
-import { SessionList } from '@/components/SessionList'
+import { SessionGrid } from '@/components/SessionGrid'
 import { InspectorPanel } from '@/components/InspectorPanel'
 import { KeyboardShortcuts } from '@/components/KeyboardShortcuts'
 import { SazParserService } from '@/lib/saz-parser'
@@ -13,8 +13,7 @@ import {
   ResizableHandle,
 } from '@/components/ui/resizable'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { ArrowCounterClockwise } from '@phosphor-icons/react'
+import { FolderOpen } from '@phosphor-icons/react'
 
 function App() {
   const [isLoading, setIsLoading] = useState(false)
@@ -91,32 +90,26 @@ function App() {
   return (
     <>
       <div className="h-screen w-screen bg-background flex flex-col">
-        <header className="border-b bg-card px-6 py-3 shrink-0 shadow-sm">
+        <header className="border-b bg-card px-6 py-2.5 shrink-0 shadow-sm">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
-                  <span className="text-accent font-bold text-sm">SAZ</span>
-                </div>
-                <h1 className="text-lg font-semibold">SAZ Viewer</h1>
+            <div className="flex items-center gap-3">
+              <div className="w-7 h-7 rounded-md bg-accent/10 border border-accent/20 flex items-center justify-center">
+                <span className="text-accent font-bold text-xs">SAZ</span>
               </div>
-              <div className="h-4 w-px bg-border" />
-              <Badge variant="secondary" className="text-xs font-medium tabular-nums">
-                {sazArchive.sessionOrder.length} {sazArchive.sessionOrder.length === 1 ? 'session' : 'sessions'}
-              </Badge>
+              <h1 className="text-base font-semibold">SAZ Viewer</h1>
             </div>
             <Button
-              variant="ghost"
+              variant="default"
               size="sm"
               onClick={() => {
                 setSazArchive(null)
                 setActiveSessionId(null)
                 setError(null)
               }}
-              className="gap-2"
+              className="gap-2 h-8"
             >
-              <ArrowCounterClockwise size={16} />
-              Load Different File
+              <FolderOpen size={16} />
+              Load New File
             </Button>
           </div>
         </header>
@@ -124,7 +117,7 @@ function App() {
         <div className="flex-1 overflow-hidden">
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
-              <SessionList
+              <SessionGrid
                 sessions={sazArchive.sessions}
                 sessionOrder={sazArchive.sessionOrder}
                 activeSessionId={activeSessionId}
@@ -152,6 +145,8 @@ function App() {
                       message={activeSession.response}
                       rawMessage={activeSession.rawServer}
                       title="Response"
+                      statusCode={activeSession.response.statusCode}
+                      statusText={activeSession.response.statusText}
                     />
                   </ResizablePanel>
                 </ResizablePanelGroup>
