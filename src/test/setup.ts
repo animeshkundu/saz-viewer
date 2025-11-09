@@ -45,3 +45,11 @@ class MockTextDecoder {
 
 global.TextEncoder = MockTextEncoder as unknown as typeof TextEncoder
 global.TextDecoder = MockTextDecoder as unknown as typeof TextDecoder
+
+// Mock scrollIntoView
+Element.prototype.scrollIntoView = vi.fn()
+
+// Mock HTMLElement methods needed for tests
+HTMLElement.prototype.scrollIntoView = vi.fn()
+HTMLElement.prototype.scrollTo = vi.fn()
+HTMLElement.prototype.scroll = vi.fn()

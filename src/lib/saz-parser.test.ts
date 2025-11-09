@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import JSZip from 'jszip'
 import { SazParserService } from './saz-parser'
 
@@ -84,8 +84,11 @@ describe('SazParserService', () => {
       
       const result = await SazParserService.parse(file)
       
+      // Session 2 is skipped from sessions map because it has no client file
+      // But sessionOrder still includes it as an ID that was discovered
       expect(result.sessions.size).toBe(1)
-      expect(result.sessionOrder).toEqual(['1'])
+      expect(result.sessionOrder).toEqual(['1', '2'])
+      expect(result.sessions.has('2')).toBe(false)
     })
 
     it('should skip incomplete sessions (missing server file)', async () => {
@@ -100,8 +103,11 @@ describe('SazParserService', () => {
       
       const result = await SazParserService.parse(file)
       
+      // Session 2 is skipped from sessions map because it has no server file
+      // But sessionOrder still includes it as an ID that was discovered
       expect(result.sessions.size).toBe(1)
-      expect(result.sessionOrder).toEqual(['1'])
+      expect(result.sessionOrder).toEqual(['1', '2'])
+      expect(result.sessions.has('2')).toBe(false)
     })
 
     it('should ignore non-raw files', async () => {

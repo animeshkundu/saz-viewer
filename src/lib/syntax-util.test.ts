@@ -73,14 +73,86 @@ describe('HexUtil', () => {
       expect(element.children.length).toBeGreaterThan(0)
     })
 
-    it('should display hex offset correctly', () => {
+    it('should display hex offset in correct format', () => {
       const element = document.createElement('div')
-      const buffer = new Uint8Array(32).buffer
+      const buffer = new Uint8Array([0x48, 0x65, 0x6c, 0x6c, 0x6f]).buffer
       
       HexUtil.render(element, buffer)
       
-      const firstLine = element.firstChild as HTMLElement
-      expect(firstLine.textContent).toContain('00000000:')
+      // Access the first child div, then its first span (the offset)
+      const firstLine = element.children[0] as HTMLElement
+      const offsetSpan = firstLine.children[0] as HTMLElement
+      expect(offsetSpan.innerText).toContain('00000000')
+    })
+
+    it('should display ASCII representation for printable characters', () => {
+      const element = document.createElement('div')
+      const buffer = new Uint8Array([0x48, 0x65, 0x6c, 0x6c, 0x6f]).buffer // "Hello"
+      
+      HexUtil.render(element, buffer)
+      
+      // Access the ASCII span (3rd child of first line)
+      const firstLine = element.children[0] as HTMLElement
+      const asciiSpan = firstLine.children[2] as HTMLElement
+      expect(asciiSpan.innerText).toContain('Hello')
+    })
+
+    it('should display dots for non-printable characters', () => {
+      const element = document.createElement('div')
+      const buffer = new Uint8Array([0x00, 0x01, 0x02]).buffer
+      
+      HexUtil.render(element, buffer)
+      
+      // Access the ASCII span
+      const firstLine = element.children[0] as HTMLElement
+      const asciiSpan = firstLine.children[2] as HTMLElement
+      expect(asciiSpan.innerText).toContain('...')
+    })
+
+    it('should display hex bytes in correct format', () => {
+      const element = document.createElement('div')
+      const buffer = new Uint8Array([0x48, 0x65, 0x6c]).buffer
+      
+      HexUtil.render(element, buffer)
+      
+      // Access the hex bytes span (2nd child of first line)
+      const firstLine = element.children[0] as HTMLElement
+      const bytesSpan = firstLine.children[1] as HTMLElement
+      expect(bytesSpan.innerText).toContain('48')
+      expect(bytesSpan.innerText).toContain('65')
+      expect(bytesSpan.innerText).toContain('6c')
+    })
+
+    it('should handle binary data correctly', () => {
+      const element = document.createElement('div')
+      const buffer = new Uint8Array([0xff, 0xfe, 0xfd]).buffer
+      
+      HexUtil.render(element, buffer)
+      
+      // Check hex bytes and ASCII
+      const firstLine = element.children[0] as HTMLElement
+      const bytesSpan = firstLine.children[1] as HTMLElement
+      const asciiSpan = firstLine.children[2] as HTMLElement
+      expect(bytesSpan.innerText).toContain('ff')
+      expect(bytesSpan.innerText).toContain('fe')
+      expect(bytesSpan.innerText).toContain('fd')
+      expect(asciiSpan.innerText).toContain('...')
+    })
+
+    it('should handle multiple lines with correct offsets', () => {
+      const element = document.createElement('div')
+      // Create data larger than 16 bytes to trigger multiple lines
+      const buffer = new Uint8Array(32).fill(0x41).buffer // 'A' repeated 32 times
+      
+      HexUtil.render(element, buffer)
+      
+      // Check offset of first two lines
+      const line0 = element.children[0] as HTMLElement
+      const line1 = element.children[1] as HTMLElement
+      const offset0 = line0.children[0] as HTMLElement
+      const offset1 = line1.children[0] as HTMLElement
+      expect(offset0.innerText).toContain('00000000')
+      expect(offset1.innerText).toContain('00000010')
     })
 
     it('should display ASCII representation', () => {
@@ -89,7 +161,9 @@ describe('HexUtil', () => {
       
       HexUtil.render(element, buffer)
       
-      expect(element.textContent).toContain('Hello')
+      const firstLine = element.children[0] as HTMLElement
+      const asciiSpan = firstLine.children[2] as HTMLElement
+      expect(asciiSpan.innerText).toContain('Hello')
     })
 
     it('should replace non-printable characters with dots', () => {
@@ -98,10 +172,11 @@ describe('HexUtil', () => {
       
       HexUtil.render(element, buffer)
       
-      const text = element.textContent || ''
-      expect(text).toContain('.')
-      expect(text).toContain('A')
-      expect(text).toContain('B')
+      const firstLine = element.children[0] as HTMLElement
+      const asciiSpan = firstLine.children[2] as HTMLElement
+      expect(asciiSpan.innerText).toContain('.')
+      expect(asciiSpan.innerText).toContain('A')
+      expect(asciiSpan.innerText).toContain('B')
     })
 
     it('should handle empty buffer', () => {
@@ -137,10 +212,11 @@ describe('HexUtil', () => {
       
       HexUtil.render(element, buffer)
       
-      const text = element.textContent || ''
-      expect(text).toContain('ff')
-      expect(text).toContain('00')
-      expect(text).toContain('0a')
+      const firstLine = element.children[0] as HTMLElement
+      const bytesSpan = firstLine.children[1] as HTMLElement
+      expect(bytesSpan.innerText).toContain('ff')
+      expect(bytesSpan.innerText).toContain('00')
+      expect(bytesSpan.innerText).toContain('0a')
     })
 
     it('should handle large buffers', () => {
@@ -168,11 +244,12 @@ describe('HexUtil', () => {
       
       HexUtil.render(element, buffer)
       
-      const text = element.textContent || ''
-      expect(text).toContain('89')
-      expect(text).toContain('50')
-      expect(text).toContain('4e')
-      expect(text).toContain('47')
+      const firstLine = element.children[0] as HTMLElement
+      const bytesSpan = firstLine.children[1] as HTMLElement
+      expect(bytesSpan.innerText).toContain('89')
+      expect(bytesSpan.innerText).toContain('50')
+      expect(bytesSpan.innerText).toContain('4e')
+      expect(bytesSpan.innerText).toContain('47')
     })
 
     it('should render multiple lines with correct offsets', () => {
@@ -181,10 +258,15 @@ describe('HexUtil', () => {
       
       HexUtil.render(element, buffer)
       
-      const lines = Array.from(element.children)
-      expect(lines[0].textContent).toContain('00000000:')
-      expect(lines[1].textContent).toContain('00000010:')
-      expect(lines[2].textContent).toContain('00000020:')
+      const line0 = element.children[0] as HTMLElement
+      const line1 = element.children[1] as HTMLElement
+      const line2 = element.children[2] as HTMLElement
+      const offset0 = line0.children[0] as HTMLElement
+      const offset1 = line1.children[0] as HTMLElement
+      const offset2 = line2.children[0] as HTMLElement
+      expect(offset0.innerText).toContain('00000000:')
+      expect(offset1.innerText).toContain('00000010:')
+      expect(offset2.innerText).toContain('00000020:')
     })
   })
 })

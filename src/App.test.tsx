@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import App from './App'
 import JSZip from 'jszip'
-import { SazParserService } from '@/lib/saz-parser'
 
 vi.mock('sonner', () => ({
   toast: {
@@ -88,8 +87,10 @@ describe('App Integration Tests', () => {
     fireEvent.change(input)
     
     await waitFor(() => {
-      expect(screen.getByText('GET')).toBeInTheDocument()
-      expect(screen.getByText('POST')).toBeInTheDocument()
+      const getMethods = screen.getAllByText('GET')
+      const postMethods = screen.getAllByText('POST')
+      expect(getMethods.length).toBeGreaterThan(0)
+      expect(postMethods.length).toBeGreaterThan(0)
     }, { timeout: 3000 })
   })
 
