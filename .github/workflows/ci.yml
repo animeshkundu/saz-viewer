@@ -66,7 +66,7 @@ jobs:
               | Functions | ${total.functions.pct}% |
               | Branches | ${total.branches.pct}% |
               
-              ${total.lines.pct >= 90 && total.statements.pct >= 90 && total.functions.pct >= 90 && total.branches.pct >= 90 ? '✅ All coverage thresholds met!' : '⚠️ Some coverage thresholds below 90%'}
+              ${total.lines.pct >= 70 && total.statements.pct >= 70 && total.functions.pct >= 70 && total.branches.pct >= 70 ? '✅ All coverage thresholds met!' : '⚠️ Some coverage thresholds below 70%'}
               `;
               
               github.rest.issues.createComment({
