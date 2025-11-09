@@ -46,9 +46,16 @@ export class SazParserService {
       const request = HttpParserUtil.parseRequest(rawClient)
       const response = HttpParserUtil.parseResponse(rawServer)
 
-      const url = request.url
       const host = request.headers.get('host') || ''
-      const fullUrl = host ? `https://${host}${url}` : url
+      const isTLS = rawServer.includes('HTTP/1.1 200 Connection established') || request.method === 'CONNECT'
+      
+      let fullUrl = request.url
+      
+      // Only construct a full URL if we have a host and the URL is not already absolute
+      if (host && !request.url.startsWith('http')) {
+        const protocol = isTLS ? 'https://' : 'http://'
+        fullUrl = `${protocol}${host}${request.url}`
+      }
 
       const session: Session = {
         id,
