@@ -11,6 +11,17 @@ A 100% client-side, serverless web application for inspecting Telerik Fiddler .s
 - 🎨 **Syntax Highlighting** - Beautiful code rendering for JSON, XML, and HTTP content
 - ⚡ **Fast & Responsive** - Handles large files with async parsing
 
+## Documentation
+
+Detailed documentation is available in the [`/docs`](./docs) folder:
+
+- [**PRD.md**](./docs/PRD.md) - Product Requirements Document
+- [**TESTING.md**](./docs/TESTING.md) - Testing strategy and guidelines
+- [**DEPLOYMENT.md**](./docs/DEPLOYMENT.md) - Deployment instructions
+- [**GITHUB_PAGES_SETUP.md**](./docs/GITHUB_PAGES_SETUP.md) - GitHub Pages deployment setup
+- [**SECURITY.md**](./docs/SECURITY.md) - Security considerations
+- [**APP_README.md**](./docs/APP_README.md) - Application architecture details
+
 ## GitHub Pages Deployment
 
 This project is configured to automatically deploy to GitHub Pages on every push to the `main` branch.
