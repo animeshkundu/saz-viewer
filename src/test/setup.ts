@@ -43,5 +43,5 @@ class MockTextDecoder {
   }
 }
 
-global.TextEncoder = MockTextEncoder as any
-global.TextDecoder = MockTextDecoder as any
+global.TextEncoder = MockTextEncoder as unknown as typeof TextEncoder
+global.TextDecoder = MockTextDecoder as unknown as typeof TextDecoder
