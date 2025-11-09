@@ -40,3 +40,38 @@ To create a .saz file for testing:
 ## Security
 
 This application never sends your .saz files or their contents to any server. All parsing and inspection happens entirely in your browser using JavaScript. Your sensitive HTTP captures (including cookies, auth tokens, and request/response data) remain completely private.
+
+## Testing
+
+This application has comprehensive test coverage (90%+) including unit tests, component tests, and integration tests.
+
+### Running Tests
+
+```bash
+# Run tests in watch mode
+npm test
+
+# Run tests once
+npm run test:run
+
+# Generate coverage report
+npm run test:coverage
+```
+
+For detailed testing documentation, see [TESTING.md](./TESTING.md).
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run linter
+npm run lint
+
+# Build for production
+npm run build
+```
