@@ -23,21 +23,8 @@ interface InspectorPanelProps {
 export function InspectorPanel({ message, rawMessage, title, statusCode, statusText }: InspectorPanelProps) {
   const contentType = message.headers.get('content-type') || ''
   const contentLength = message.headers.get('content-length') || message.bodyAsArrayBuffer.byteLength
-  const [activeTab, setActiveTab] = useState<string>('headers')
-  const hexViewRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const defaultTab = getDefaultTab(contentType)
-    setActiveTab(defaultTab)
-  }, [contentType, message])
-
-  useEffect(() => {
-    if (activeTab === 'hexview' && hexViewRef.current) {
-      HexUtil.render(hexViewRef.current, message.bodyAsArrayBuffer)
-    }
-  }, [activeTab, message.bodyAsArrayBuffer])
-
-  const getDefaultTab = (ct: string): string => {
+  function getDefaultTab(ct: string): string {
     if (ct.includes('application/json') || ct.includes('application/vnd.api+json')) {
       return 'json'
     }
@@ -53,6 +40,17 @@ export function InspectorPanel({ message, rawMessage, title, statusCode, statusT
     }
     return 'headers'
   }
+
+  const [activeTab, setActiveTab] = useState<string>(() => getDefaultTab(contentType))
+  const hexViewRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (activeTab === 'hexview' && hexViewRef.current) {
+      HexUtil.render(hexViewRef.current, message.bodyAsArrayBuffer)
+    }
+  }, [activeTab, message.bodyAsArrayBuffer])
+
+  
 
   const shouldShowTab = (tab: string): boolean => {
     switch (tab) {

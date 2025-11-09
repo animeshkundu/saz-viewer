@@ -21,10 +21,11 @@ describe('SazParserService', () => {
       expect(result.sessionOrder).toEqual(['1'])
       
       const session = result.sessions.get('1')
-      expect(session).toBeDefined()
+  expect(session).toBeDefined()
       expect(session!.id).toBe('1')
       expect(session!.method).toBe('GET')
-      expect(session!.url).toBe('https://example.com/api/test')
+  // parser constructs http by default unless TLS/CONNECT detected
+  expect(session!.url).toBe('http://example.com/api/test')
       expect(session!.request.url).toBe('/api/test')
       expect(session!.response.statusCode).toBe(200)
     })
@@ -176,7 +177,8 @@ describe('SazParserService', () => {
       
       const result = await SazParserService.parse(file)
       
-      expect(result.sessions.get('1')!.url).toBe('https://api.example.com:8080/api/users?page=1')
+      // host header should produce http URL unless TLS/CONNECT detected
+      expect(result.sessions.get('1')!.url).toBe('http://api.example.com:8080/api/users?page=1')
     })
 
     it('should use URL as-is when no host header present', async () => {

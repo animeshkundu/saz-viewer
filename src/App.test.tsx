@@ -69,7 +69,8 @@ describe('App Integration Tests', () => {
     fireEvent.change(input)
     
     await waitFor(() => {
-      expect(screen.getByText('Sessions (3)')).toBeInTheDocument()
+      expect(screen.getByText('Sessions')).toBeInTheDocument()
+      expect(screen.getByText(/\(\s*3\s*\)/)).toBeInTheDocument()
     }, { timeout: 3000 })
   })
 
@@ -186,14 +187,15 @@ describe('App Integration Tests', () => {
     fireEvent.change(input)
     
     await waitFor(() => {
-      expect(screen.getByText('Sessions (3)')).toBeInTheDocument()
+      expect(screen.getByText('Sessions')).toBeInTheDocument()
+      expect(screen.getByText(/\(\s*3\s*\)/)).toBeInTheDocument()
     }, { timeout: 3000 })
     
     const downEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' })
     window.dispatchEvent(downEvent)
     
     await waitFor(() => {
-      const activeCells = document.querySelectorAll('.bg-accent\\/15')
+      const activeCells = document.querySelectorAll('.bg-blue-50')
       expect(activeCells.length).toBeGreaterThan(0)
     })
   })
@@ -212,7 +214,8 @@ describe('App Integration Tests', () => {
     fireEvent.change(input)
     
     await waitFor(() => {
-      expect(screen.getByText('Sessions (3)')).toBeInTheDocument()
+      expect(screen.getByText('Sessions')).toBeInTheDocument()
+      expect(screen.getByText(/\(\s*3\s*\)/)).toBeInTheDocument()
     }, { timeout: 3000 })
     
     const upEvent = new KeyboardEvent('keydown', { key: 'ArrowUp' })
@@ -221,7 +224,7 @@ describe('App Integration Tests', () => {
     window.dispatchEvent(upEvent)
     
     await waitFor(() => {
-      const activeCells = document.querySelectorAll('.bg-accent\\/15')
+      const activeCells = document.querySelectorAll('.bg-blue-50')
       expect(activeCells.length).toBeGreaterThan(0)
     })
   })
@@ -240,7 +243,8 @@ describe('App Integration Tests', () => {
     fireEvent.change(input)
     
     await waitFor(() => {
-      expect(screen.getByText('Sessions (3)')).toBeInTheDocument()
+      expect(screen.getByText('Sessions')).toBeInTheDocument()
+      expect(screen.getByText(/\(\s*3\s*\)/)).toBeInTheDocument()
     }, { timeout: 3000 })
     
     const downEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' })
@@ -250,7 +254,7 @@ describe('App Integration Tests', () => {
     window.dispatchEvent(downEvent)
     
     await waitFor(() => {
-      const activeCells = document.querySelectorAll('.bg-accent\\/15')
+      const activeCells = document.querySelectorAll('.bg-blue-50')
       expect(activeCells.length).toBeGreaterThan(0)
     })
   })

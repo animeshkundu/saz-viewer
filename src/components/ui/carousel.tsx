@@ -91,16 +91,20 @@ function Carousel({
 
   useEffect(() => {
     if (!api || !setApi) return
-    setApi(api)
+    // defer setApi to avoid synchronous setState inside effect
+    const t = setTimeout(() => setApi(api), 0)
+    return () => clearTimeout(t)
   }, [api, setApi])
 
   useEffect(() => {
     if (!api) return
-    onSelect(api)
+    // call onSelect asynchronously to avoid setState during render/effect
+    const t = setTimeout(() => onSelect(api), 0)
     api.on("reInit", onSelect)
     api.on("select", onSelect)
 
     return () => {
+      clearTimeout(t)
       api?.off("select", onSelect)
     }
   }, [api, onSelect])
