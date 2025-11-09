@@ -196,7 +196,8 @@ describe('InspectorPanel', () => {
       />
     )
 
-    const statusElement = container.querySelector('.text-orange-600')
+    // component treats 4xx as error range and uses red color
+    const statusElement = container.querySelector('.text-red-600')
     expect(statusElement).toBeInTheDocument()
   })
 
