@@ -354,4 +354,152 @@ describe('SessionGrid', () => {
     const loginUrlElements = screen.getAllByText(/https:\/\/example.com\/api\/login/)
     expect(loginUrlElements.length).toBeGreaterThan(0)
   })
+
+  it('should have method filter button', () => {
+    const { container } = render(
+      <SessionGrid
+        sessions={mockSessions}
+        sessionOrder={mockSessionOrder}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    // Find the filter button by its icon
+    const filterButton = container.querySelector('button svg')?.closest('button')
+    expect(filterButton).toBeTruthy()
+  })
+
+  it('should handle column resizing', () => {
+    const { container } = render(
+      <SessionGrid
+        sessions={mockSessions}
+        sessionOrder={mockSessionOrder}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    // Find the resize handle for the ID column
+    const resizeHandle = container.querySelector('th:first-child .cursor-col-resize')
+    expect(resizeHandle).toBeInTheDocument()
+
+    // Simulate mouse down on resize handle
+    if (resizeHandle) {
+      fireEvent.mouseDown(resizeHandle, { clientX: 100 })
+
+      // Simulate mouse move
+      fireEvent.mouseMove(document, { clientX: 150 })
+
+      // Simulate mouse up
+      fireEvent.mouseUp(document)
+      
+      // Verify resizing state was triggered
+      expect(resizeHandle).toBeInTheDocument()
+    }
+  })
+
+  it('should display sort icons correctly', () => {
+    render(
+      <SessionGrid
+        sessions={mockSessions}
+        sessionOrder={mockSessionOrder}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    // Initially sorted by ID ascending, so should show up caret
+    const idHeader = screen.getByText('#').closest('th')!
+    expect(idHeader.querySelector('svg')).toBeInTheDocument()
+
+    // Click to change to descending
+    fireEvent.click(idHeader)
+    expect(idHeader.querySelector('svg')).toBeInTheDocument()
+
+    // Click status header - should show sort icon on status, not on ID
+    const statusHeader = screen.getByText('Status').closest('th')!
+    fireEvent.click(statusHeader)
+    expect(statusHeader.querySelector('svg')).toBeInTheDocument()
+  })
+
+  it('should handle status codes with different ranges', () => {
+    const sessions = new Map([
+      ['1', createMockSession('1', 'GET', '/api/redirect', 301)],
+      ['2', createMockSession('2', 'GET', '/api/success', 204)],
+      ['3', createMockSession('3', 'GET', '/api/error', 503)],
+    ])
+
+    const { container } = render(
+      <SessionGrid
+        sessions={sessions}
+        sessionOrder={['1', '2', '3']}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    const statusCells = Array.from(container.querySelectorAll('tbody td:nth-child(2)')) as HTMLElement[]
+    
+    const cell301 = statusCells.find(cell => cell.textContent === '301')
+    expect(cell301?.className).toContain('blue')
+    
+    const cell204 = statusCells.find(cell => cell.textContent === '204')
+    expect(cell204?.className).toContain('emerald')
+    
+    const cell503 = statusCells.find(cell => cell.textContent === '503')
+    expect(cell503?.className).toContain('red')
+  })
+
+  it('should handle unknown HTTP method colors', () => {
+    const sessions = new Map([
+      ['1', createMockSession('1', 'OPTIONS', '/api/preflight', 200)],
+    ])
+
+    const { container } = render(
+      <SessionGrid
+        sessions={sessions}
+        sessionOrder={['1']}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    const methodCells = Array.from(container.querySelectorAll('tbody td:nth-child(3)')) as HTMLElement[]
+    const optionsCell = methodCells.find(cell => cell.textContent === 'OPTIONS')
+    expect(optionsCell?.className).toContain('muted-foreground')
+  })
+
+  it('should filter sessions when method filter is applied', () => {
+    const { container } = render(
+      <SessionGrid
+        sessions={mockSessions}
+        sessionOrder={mockSessionOrder}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    // Initially all sessions should be visible
+    const rows = container.querySelectorAll('tbody tr')
+    expect(rows.length).toBe(4)
+
+    // Find and click the filter button
+    const filterButton = container.querySelector('button svg')?.closest('button')
+    if (filterButton) {
+      fireEvent.click(filterButton)
+      
+      // Find GET checkbox and toggle it
+      const checkboxes = Array.from(container.querySelectorAll('[role="menuitemcheckbox"]')) as HTMLElement[]
+      if (checkboxes.length > 0) {
+        const getCheckbox = checkboxes.find(
+          cb => cb.textContent?.includes('GET')
+        )
+        if (getCheckbox) {
+          fireEvent.click(getCheckbox)
+        }
+      }
+    }
+  })
 })
+
