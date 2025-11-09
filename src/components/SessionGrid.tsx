@@ -221,11 +221,11 @@ export function SessionGrid({
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="h-8 gap-1.5 px-2.5 shrink-0"
+                className="h-8 px-3 shrink-0 flex items-center gap-2"
               >
-                <FunnelSimple size={14} weight="bold" />
+                <FunnelSimple size={14} weight="bold" className="shrink-0" />
                 {methodFilters.size > 0 && (
-                  <Badge variant="secondary" className="h-4 px-1 text-[10px]">
+                  <Badge variant="secondary" className="h-4 px-1.5 text-[10px] font-semibold shrink-0">
                     {methodFilters.size}
                   </Badge>
                 )}
@@ -239,7 +239,7 @@ export function SessionGrid({
                   key={method}
                   checked={methodFilters.has(method)}
                   onCheckedChange={() => toggleMethodFilter(method)}
-                  className="text-xs"
+                  className="text-xs font-mono"
                 >
                   {method}
                 </DropdownMenuCheckboxItem>

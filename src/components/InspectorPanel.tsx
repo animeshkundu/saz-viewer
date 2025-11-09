@@ -127,46 +127,46 @@ export function InspectorPanel({ message, rawMessage, title, statusCode, statusT
         <TabsList className="w-full justify-start rounded-none border-b bg-muted/10 h-auto p-0">
           <TabsTrigger
             value="headers"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent-foreground gap-1.5 px-3 py-2 text-xs font-medium"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent-foreground px-3 py-2 text-xs font-medium flex items-center gap-1.5"
           >
-            <ListBullets size={14} weight="bold" />
-            Headers
-            <Badge variant="secondary" className="ml-1 h-4 px-1 text-[10px]">
+            <ListBullets size={14} weight="bold" className="shrink-0" />
+            <span>Headers</span>
+            <Badge variant="secondary" className="h-4 px-1.5 text-[10px] font-semibold shrink-0">
               {message.headers.size}
             </Badge>
           </TabsTrigger>
           <TabsTrigger
             value="raw"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent-foreground gap-1.5 px-3 py-2 text-xs font-medium"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent-foreground px-3 py-2 text-xs font-medium flex items-center gap-1.5"
           >
-            <Code size={14} weight="bold" />
-            Raw
+            <Code size={14} weight="bold" className="shrink-0" />
+            <span>Raw</span>
           </TabsTrigger>
           {shouldShowTab('json') && (
             <TabsTrigger
               value="json"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent-foreground gap-1.5 px-3 py-2 text-xs font-medium"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent-foreground px-3 py-2 text-xs font-medium flex items-center gap-1.5"
             >
-              <Code size={14} weight="bold" />
-              JSON
+              <Code size={14} weight="bold" className="shrink-0" />
+              <span>JSON</span>
             </TabsTrigger>
           )}
           {shouldShowTab('xml') && (
             <TabsTrigger
               value="xml"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent-foreground gap-1.5 px-3 py-2 text-xs font-medium"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent-foreground px-3 py-2 text-xs font-medium flex items-center gap-1.5"
             >
-              <FileCode size={14} weight="bold" />
-              XML
+              <FileCode size={14} weight="bold" className="shrink-0" />
+              <span>XML</span>
             </TabsTrigger>
           )}
           {shouldShowTab('hexview') && (
             <TabsTrigger
               value="hexview"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent-foreground gap-1.5 px-3 py-2 text-xs font-medium"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent-foreground px-3 py-2 text-xs font-medium flex items-center gap-1.5"
             >
-              <FileMagnifyingGlass size={14} weight="bold" />
-              Hex
+              <FileMagnifyingGlass size={14} weight="bold" className="shrink-0" />
+              <span>Hex</span>
             </TabsTrigger>
           )}
         </TabsList>
