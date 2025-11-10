@@ -16,7 +16,7 @@
         "test:coverage": "vitest run --coverage"
     },
     "dependencies": {
-        "@github/spark": "^0.39.0",
+        "@github/spark": "^0.41.23",
     "@phosphor-icons/react": "^2.1.10",
         "@radix-ui/colors": "^3.0.0",
         "@radix-ui/react-accordion": "^1.2.3",
