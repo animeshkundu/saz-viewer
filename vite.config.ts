@@ -13,7 +13,7 @@ export default defineConfig({
   base: process.env.VITE_BASE_PATH || './',
   server: {
     port: 5173,
-    strictPort: false,
+    strictPort: true,
   },
   plugins: [
     react(),
