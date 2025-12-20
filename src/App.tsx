@@ -99,6 +99,7 @@ function App() {
               <h1 className="text-base font-semibold">SAZ Viewer</h1>
             </div>
             <Button
+              data-testid="load-new-file-button"
               variant="default"
               size="sm"
               onClick={() => {

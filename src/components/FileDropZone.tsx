@@ -56,6 +56,7 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gradient-to-br from-background via-background to-muted/20">
       <div
+        data-testid="file-drop-zone"
         className={`
           w-full max-w-2xl border-2 border-dashed rounded-xl p-16
           transition-all duration-200
@@ -94,6 +95,7 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
           </div>
 
           <Button
+            data-testid="upload-button"
             onClick={handleButtonClick}
             disabled={isLoading}
             size="lg"
@@ -114,7 +116,7 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
       </div>
 
       {error && (
-        <Alert variant="destructive" className="mt-6 max-w-2xl shadow-lg animate-in fade-in slide-in-from-top-2 duration-300">
+        <Alert data-testid="error-alert" variant="destructive" className="mt-6 max-w-2xl shadow-lg animate-in fade-in slide-in-from-top-2 duration-300">
           <Warning size={20} />
           <AlertDescription className="ml-2">{error}</AlertDescription>
         </Alert>
