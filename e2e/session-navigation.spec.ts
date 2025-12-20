@@ -53,7 +53,7 @@ test.describe('Session Navigation', () => {
     await expect(session2).toHaveAttribute('data-active', 'true')
     
     // Verify request details for session 2 (POST request)
-    await expect(page.locator('text=/POST|/api/users/').first()).toBeVisible()
+    await expect(page.getByText('POST')).toBeVisible()
   })
 
   test('should navigate to next session with arrow down key', async ({ page }) => {
@@ -96,14 +96,38 @@ test.describe('Session Navigation', () => {
   })
 
   test('should not navigate past last session with arrow down', async ({ page }) => {
-    // Find the last session
+    // Find the last session by getting all visible session rows  
     const sessions = page.locator('[data-testid^="session-"]')
-    const count = await sessions.count()
-    const lastSessionId = count.toString()
+    await sessions.first().waitFor({ state: 'visible' })
     
-    // Click on last session
-    await page.click(`[data-testid="session-${lastSessionId}"]`)
+    const count = await sessions.count()
+    
+    // Get all session IDs to find the actual last one
+    const sessionIds: number[] = []
+    for (let i = 0; i < count; i++) {
+      const element = sessions.nth(i)
+      const testId = await element.getAttribute('data-testid')
+      if (testId && testId.startsWith('session-')) {
+        const id = parseInt(testId.replace('session-', ''), 10)
+        if (!isNaN(id)) {
+          sessionIds.push(id)
+        }
+      }
+    }
+    
+    // If we couldn't parse IDs, default to count
+    const lastSessionId = sessionIds.length > 0 
+      ? Math.max(...sessionIds).toString() 
+      : count.toString()
+    
+    // Wait for and click the last session
+    const lastSessionSelector = `[data-testid="session-${lastSessionId}"]`
+    await page.waitForSelector(lastSessionSelector, { state: 'visible' })
+    await page.click(lastSessionSelector)
     await page.waitForTimeout(500)
+    
+    // Verify it's active
+    await expect(page.locator(lastSessionSelector)).toHaveAttribute('data-active', 'true')
     
     // Press arrow down multiple times
     await page.keyboard.press('ArrowDown')
@@ -111,7 +135,7 @@ test.describe('Session Navigation', () => {
     await page.waitForTimeout(500)
     
     // Last session should still be active
-    await expect(page.locator(`[data-testid="session-${lastSessionId}"]`)).toHaveAttribute('data-active', 'true')
+    await expect(page.locator(lastSessionSelector)).toHaveAttribute('data-active', 'true')
   })
 
   test('should highlight active session visually', async ({ page }) => {
@@ -152,7 +176,7 @@ test.describe('Session Navigation', () => {
     await expect(session1.locator('text=GET')).toBeVisible()
     
     // Should have URL
-    await expect(session1.locator('text=/api/')).toBeVisible()
+    await expect(session1.getByText('/api/', { exact: false })).toBeVisible()
   })
 
   test('should show correct status code colors', async ({ page }) => {
