@@ -29,8 +29,9 @@ Read these before making changes:
 Every change must pass:
 ```bash
 npm run lint           # Must pass
-npm run test:coverage  # Must maintain >90%
-npm run build         # Must succeed
+npm run test:coverage  # Unit tests must maintain >90%
+npm run e2e            # E2E tests for UI changes
+npm run build          # Must succeed
 ```
 
 ## Development Standards
@@ -86,13 +87,19 @@ export function useSazParser() {
 
 ### Testing Requirements
 
+SAZ Viewer uses **two types of tests**, both targeting **90%+ coverage**:
+
+- **Unit Tests** (Vitest): Test functions, components, integration
+- **E2E Tests** (Playwright): Test complete user workflows in browser
+
 - **Write Tests First**: TDD approach when possible
-- **Coverage >90%**: Required for all code
+- **Coverage >90%**: Required for unit tests; E2E must cover 90%+ of user workflows
 - **Test Behavior**: Not implementation details
-- **Use Testing Library**: Follow best practices
+- **Use Testing Library**: Follow best practices for unit tests
+- **Use Playwright**: For E2E user workflow tests
 
 ```typescript
-// ✅ Good: Tests behavior
+// ✅ Good: Unit test - tests behavior
 describe('SessionGrid', () => {
   it('highlights selected session when clicked', async () => {
     const onSelect = vi.fn();
@@ -103,6 +110,13 @@ describe('SessionGrid', () => {
     expect(onSelect).toHaveBeenCalledWith(1);
     expect(screen.getByRole('row', { selected: true })).toHaveClass('bg-accent/15');
   });
+});
+
+// ✅ Good: E2E test - tests complete workflow
+test('should upload and display SAZ file', async ({ page }) => {
+  await page.goto('/');
+  await page.setInputFiles('input[type="file"]', 'fixtures/sample.saz');
+  await expect(page.getByText('GET')).toBeVisible();
 });
 
 // ❌ Bad: Tests implementation

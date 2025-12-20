@@ -70,15 +70,16 @@ Follow this workflow **WITHOUT EXCEPTION**:
 1. Read relevant documentation (see Essential Reading)
 2. Understand existing code patterns
 3. Plan minimal changes
-4. Write/update tests
+4. Write/update tests (both unit and E2E as needed)
 5. Implement changes
 6. Run linter: npm run lint
-7. Run tests: npm run test:coverage
-8. Verify 90%+ coverage maintained
-9. Build: npm run build
-10. Manual verification (if UI changes)
-11. Update documentation (if needed)
-12. Record ADR (if architectural decision)
+7. Run unit tests: npm run test:coverage
+8. Verify 90%+ unit test coverage maintained
+9. Run E2E tests: npm run e2e (for UI changes)
+10. Build: npm run build
+11. Manual verification (if UI changes)
+12. Update documentation (if needed)
+13. Record ADR (if architectural decision)
 ```
 
 ### Commands Reference
@@ -91,11 +92,18 @@ npm run dev              # Start dev server with hot reload
 npm run lint            # Run ESLint (must pass)
 npm run lint --fix      # Auto-fix linting issues
 
-# Testing
-npm test                # Run tests in watch mode
-npm run test:run        # Run tests once
-npm run test:coverage   # Generate coverage report (must be >90%)
+# Unit Testing (Vitest)
+npm test                # Run unit tests in watch mode
+npm run test:run        # Run unit tests once
+npm run test:coverage   # Generate unit test coverage report (must be >90%)
 npm run test:ui         # Visual test UI
+
+# E2E Testing (Playwright)
+npm run e2e             # Run E2E tests (headless)
+npm run e2e:ui          # Run E2E tests with UI mode
+npm run e2e:debug       # Debug E2E tests with Playwright Inspector
+npm run e2e:headed      # Run E2E tests with visible browser
+npm run e2e:report      # View E2E test report
 
 # Build
 npm run build           # TypeScript compile + Vite build (must succeed)
@@ -107,8 +115,17 @@ npx tsc --noEmit       # Type check without build
 
 ## Testing Requirements
 
+SAZ Viewer uses **two types of tests**, both targeting **90%+ coverage**:
+
+### 1. Unit Tests (Vitest)
+Testing code at the function and component level with fast, isolated tests.
+
+### 2. E2E Tests (Playwright)
+Testing complete user workflows in a real browser environment.
+
 ### Coverage Thresholds (NON-NEGOTIABLE)
 
+**Unit Test Coverage:**
 ```json
 {
   "lines": 90,
@@ -118,25 +135,39 @@ npx tsc --noEmit       # Type check without build
 }
 ```
 
+**E2E Test Coverage:**
+E2E tests must cover **90%+ of user workflows and critical paths**:
+- All file upload scenarios
+- All session navigation paths
+- All inspector views and tabs
+- All UI interactions and filters
+- Error states and edge cases
+
 ### Test Types Required
 
-**1. Unit Tests**
+**1. Unit Tests** (Vitest)
 - Test individual functions and utilities
 - Mock external dependencies
 - Fast execution (<1ms per test)
 - Example: `sazParser.test.ts`, `httpParser.test.ts`
 
-**2. Component Tests**
+**2. Component Tests** (Vitest + Testing Library)
 - Test React components in isolation
 - Use Testing Library patterns
 - Test user interactions
 - Example: `SessionGrid.test.tsx`, `Inspector.test.tsx`
 
-**3. Integration Tests**
-- Test feature workflows end-to-end
+**3. Integration Tests** (Vitest + Testing Library)
+- Test feature workflows end-to-end within the app
 - Test component interactions
 - Use realistic data
 - Example: `App.test.tsx`
+
+**4. E2E Tests** (Playwright)
+- Test complete user workflows in real browser
+- Test drag-drop, file picker, keyboard shortcuts
+- Test across different viewports
+- Example: `file-upload.spec.ts`, `session-navigation.spec.ts`
 
 ### Test Writing Guidelines
 
@@ -170,14 +201,24 @@ describe('SessionGrid', () => {
 ### Running Tests
 
 ```bash
-# During development
+# Unit Tests - During development
 npm test                    # Watch mode, fast feedback
 
-# Before commit
+# Unit Tests - Before commit
 npm run test:coverage       # Verify coverage >90%
 
-# Check specific file
+# Unit Tests - Check specific file
 npm test -- SessionGrid     # Run tests matching "SessionGrid"
+
+# E2E Tests - Before commit
+npm run e2e                 # Run all E2E tests (headless)
+
+# E2E Tests - Debugging
+npm run e2e:debug           # Debug with Playwright Inspector
+npm run e2e:headed          # Run with visible browser
+
+# E2E Tests - Check specific file
+npm run e2e -- file-upload  # Run E2E tests matching "file-upload"
 ```
 
 ## Code Patterns & Conventions
