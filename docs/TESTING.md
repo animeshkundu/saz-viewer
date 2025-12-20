@@ -4,38 +4,56 @@ This document provides comprehensive information about the testing infrastructur
 
 ## Overview
 
-The SAZ Viewer has comprehensive test coverage including:
+The SAZ Viewer has comprehensive test coverage with **two types of tests**:
+
+### 1. Unit Tests (Vitest)
+Testing individual functions, utilities, and React components:
 - **Unit Tests**: Testing individual functions and utilities
 - **Component Tests**: Testing React components in isolation
-- **Integration Tests**: Testing complete user flows
+- **Integration Tests**: Testing complete user flows in the application
 
-**Coverage Target**: 90%+ coverage across all metrics (lines, functions, branches, statements)
+### 2. E2E Tests (Playwright)
+Testing complete end-to-end user workflows in a real browser:
+- **File Upload**: Drag-drop and file picker interactions
+- **Session Navigation**: Browsing and selecting sessions
+- **Inspector**: Viewing request/response details
+- **UI Interactions**: Search, filter, keyboard shortcuts
+
+**Coverage Target**: **90%+ coverage for BOTH unit tests and E2E tests** across all metrics (lines, functions, branches, statements)
 
 ## Test Stack
 
+### Unit Testing
 - **Test Runner**: [Vitest](https://vitest.dev/) - Fast, Vite-native test runner
 - **Testing Library**: [@testing-library/react](https://testing-library.com/react) - React component testing utilities
 - **Coverage Provider**: [@vitest/coverage-v8](https://vitest.dev/guide/coverage.html) - V8 coverage provider
 - **Mocking**: Vitest's built-in mocking capabilities
 
+### E2E Testing
+- **Test Framework**: [Playwright](https://playwright.dev/) - Modern E2E testing framework
+- **Browser Support**: Chromium (Chrome/Edge), with Firefox and WebKit available
+- **Features**: Screenshots, video recording, trace viewer, parallel execution
+
 ## Running Tests
 
-### Run all tests in watch mode
+### Unit Tests
+
+#### Run all unit tests in watch mode
 ```bash
 npm test
 ```
 
-### Run tests once (CI mode)
+#### Run unit tests once (CI mode)
 ```bash
 npm run test:run
 ```
 
-### Run tests with UI
+#### Run unit tests with UI
 ```bash
 npm run test:ui
 ```
 
-### Generate coverage report
+#### Generate unit test coverage report
 ```bash
 npm run test:coverage
 ```
@@ -45,7 +63,42 @@ Coverage reports are generated in the `coverage/` directory:
 - `coverage/lcov.info` - LCOV format for CI tools
 - `coverage/coverage-final.json` - JSON format
 
+### E2E Tests
+
+#### Run E2E tests (headless)
+```bash
+npm run e2e
+```
+
+#### Run E2E tests with UI mode
+```bash
+npm run e2e:ui
+```
+
+#### Run E2E tests with visible browser
+```bash
+npm run e2e:headed
+```
+
+#### Debug E2E tests
+```bash
+npm run e2e:debug
+```
+
+#### View E2E test report
+```bash
+npm run e2e:report
+```
+
+E2E test artifacts are generated in the `test-results/` and `playwright-report/` directories:
+- Screenshots on failure
+- Videos on failure
+- Trace files for debugging
+- HTML test report
+
 ## Test Structure
+
+### Unit Test Structure
 
 ```
 src/
@@ -62,6 +115,20 @@ src/
 │   ├── InspectorPanel.test.tsx     # Inspector panel tests
 │   └── KeyboardShortcuts.test.tsx  # Keyboard shortcuts tests
 └── App.test.tsx                    # Integration tests
+```
+
+### E2E Test Structure
+
+```
+e2e/
+├── fixtures/
+│   └── sample.saz                  # Test SAZ file for E2E tests
+├── helpers/
+│   └── test-utils.ts               # Shared E2E test utilities
+├── file-upload.spec.ts             # File upload E2E tests
+├── session-navigation.spec.ts      # Session browsing E2E tests
+├── inspector.spec.ts               # Inspector panel E2E tests
+└── ui-interactions.spec.ts         # UI interaction E2E tests
 ```
 
 ## Test Categories
@@ -153,10 +220,53 @@ Tests complete user workflows:
 - ✅ "Load New File" functionality
 - ✅ Panel layout rendering
 
+### 4. E2E Tests (Playwright)
+
+#### File Upload (`file-upload.spec.ts`)
+Tests end-to-end file upload workflows:
+- ✅ Drag and drop SAZ file
+- ✅ File picker selection
+- ✅ Valid SAZ file parsing
+- ✅ Invalid file rejection
+- ✅ Loading states
+- ✅ Error messages
+
+#### Session Navigation (`session-navigation.spec.ts`)
+Tests browsing and selecting sessions:
+- ✅ Session list display
+- ✅ Session selection via click
+- ✅ Keyboard navigation (arrow keys)
+- ✅ Session details update
+- ✅ Active session highlighting
+- ✅ Search and filter
+- ✅ Sorting functionality
+
+#### Inspector Panel (`inspector.spec.ts`)
+Tests request/response inspection:
+- ✅ Headers tab display
+- ✅ Raw tab display
+- ✅ JSON tab with syntax highlighting
+- ✅ XML tab display
+- ✅ Hex view for binary content
+- ✅ Tab switching
+- ✅ Status code display
+- ✅ Content size display
+
+#### UI Interactions (`ui-interactions.spec.ts`)
+Tests general UI interactions:
+- ✅ Search functionality
+- ✅ Method filtering
+- ✅ Column sorting
+- ✅ Keyboard shortcuts
+- ✅ Load new file button
+- ✅ Panel resizing
+- ✅ Responsive design
+
 ## Coverage Thresholds
 
-The project enforces minimum coverage thresholds:
+The project enforces minimum coverage thresholds for **BOTH unit and E2E tests**:
 
+### Unit Test Coverage (Vitest)
 ```javascript
 coverage: {
   thresholds: {
@@ -168,7 +278,15 @@ coverage: {
 }
 ```
 
-Builds will fail if coverage drops below 90% in any category.
+### E2E Test Coverage (Playwright)
+E2E tests target **90%+ coverage** of user workflows and critical paths:
+- All file upload scenarios
+- All session navigation paths
+- All inspector views and tabs
+- All UI interactions and filters
+- Error states and edge cases
+
+Builds will fail if unit test coverage drops below 90% in any category. E2E test coverage is monitored to ensure comprehensive user workflow testing.
 
 ## Excluded from Coverage
 
@@ -233,26 +351,38 @@ Tests run automatically on:
 - Pushes to main branch
 - Before deployment
 
-The GitHub Actions workflow:
+The GitHub Actions workflow runs **both unit and E2E tests**:
+
+### Unit Tests
 1. Installs dependencies
 2. Runs `npm run test:run`
 3. Generates coverage report
 4. Uploads coverage to artifacts
-5. Fails if coverage is below thresholds
+5. Fails if coverage is below 90% thresholds
+
+### E2E Tests
+1. Installs dependencies
+2. Installs Playwright browsers
+3. Runs `npm run e2e`
+4. Captures screenshots and videos on failure
+5. Uploads test results and artifacts
+6. Generates HTML test report
 
 ## Debugging Tests
 
-### Run a single test file
+### Unit Tests
+
+#### Run a single test file
 ```bash
 npm test -- http-parser.test.ts
 ```
 
-### Run tests matching a pattern
+#### Run tests matching a pattern
 ```bash
 npm test -- -t "should parse"
 ```
 
-### Debug in VS Code
+#### Debug in VS Code
 Add a breakpoint and use the "Debug Test" option in the test file, or use this launch configuration:
 
 ```json
@@ -267,11 +397,45 @@ Add a breakpoint and use the "Debug Test" option in the test file, or use this l
 }
 ```
 
-### View coverage details
+#### View coverage details
 After running `npm run test:coverage`, open `coverage/index.html` in a browser to see:
 - Line-by-line coverage
 - Uncovered branches
 - Function coverage details
+
+### E2E Tests
+
+#### Run a single E2E test file
+```bash
+npm run e2e -- file-upload.spec.ts
+```
+
+#### Run E2E tests matching a pattern
+```bash
+npm run e2e -- -g "should upload"
+```
+
+#### Debug E2E test with Playwright Inspector
+```bash
+npm run e2e:debug
+```
+
+#### View E2E test traces
+After a test failure, view the trace file:
+```bash
+npx playwright show-trace test-results/<test-name>/trace.zip
+```
+
+#### View E2E test report
+```bash
+npm run e2e:report
+```
+
+The report includes:
+- Test results and timing
+- Screenshots on failure
+- Videos on failure
+- Detailed error messages
 
 ## Common Issues
 
@@ -296,7 +460,9 @@ After running `npm run test:coverage`, open `coverage/index.html` in a browser t
 
 Potential testing improvements:
 - [ ] Visual regression tests (e.g., with Percy or Chromatic)
-- [ ] E2E tests with Playwright
+- [x] ~~E2E tests with Playwright~~ ✅ **COMPLETED**
 - [ ] Performance benchmarks
-- [ ] Accessibility tests (axe-core)
+- [ ] Accessibility tests (axe-core integration)
 - [ ] Snapshot tests for complex UI states
+- [ ] Cross-browser E2E testing (Firefox, WebKit)
+- [ ] Mobile device E2E testing
