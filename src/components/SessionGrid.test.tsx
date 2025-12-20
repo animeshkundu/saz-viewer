@@ -113,7 +113,7 @@ describe('SessionGrid', () => {
       />
     )
 
-  const searchInput = screen.getByPlaceholderText('Search...')
+  const searchInput = screen.getByPlaceholderText('Search sessions...')
     fireEvent.change(searchInput, { target: { value: 'login' } })
 
     expect(screen.getByText('POST')).toBeInTheDocument()
@@ -130,7 +130,7 @@ describe('SessionGrid', () => {
       />
     )
 
-  const searchInput = screen.getByPlaceholderText('Search...')
+  const searchInput = screen.getByPlaceholderText('Search sessions...')
     fireEvent.change(searchInput, { target: { value: '3' } })
 
     const rows = screen.getAllByRole('row')
@@ -147,7 +147,7 @@ describe('SessionGrid', () => {
       />
     )
 
-  const searchInput = screen.getByPlaceholderText('Search...')
+  const searchInput = screen.getByPlaceholderText('Search sessions...')
     fireEvent.change(searchInput, { target: { value: 'nonexistent' } })
 
     expect(screen.getByText('No sessions found')).toBeInTheDocument()
@@ -302,7 +302,7 @@ describe('SessionGrid', () => {
     )
 
   // Look for filter functionality - the component may not have a filter button with that exact label
-  const searchInput = screen.getByPlaceholderText('Search...')
+  const searchInput = screen.getByPlaceholderText('Search sessions...')
     expect(searchInput).toBeInTheDocument()
   })
 

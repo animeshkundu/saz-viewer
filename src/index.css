@@ -8,47 +8,47 @@
 }
 
 :root {
-  /* Pastel Serenity Theme - Soft, elegant, and approachable */
-  --background: oklch(0.985 0.003 250); /* #FAFBFC - Off white with hint of blue */
-  --foreground: oklch(0.35 0.02 250); /* Softer dark text for reduced eye strain */
+  /* Refined Serenity Theme - Elegant, fluid, and inviting */
+  --background: oklch(0.99 0.002 250); /* Pure, bright background */
+  --foreground: oklch(0.30 0.02 250); /* Refined dark text */
   
-  --card: oklch(0.995 0.002 250); /* #FFFFFF with subtle warmth */
-  --card-foreground: oklch(0.35 0.02 250);
+  --card: oklch(1 0 0); /* Pure white cards */
+  --card-foreground: oklch(0.30 0.02 250);
   
-  --popover: oklch(0.995 0.002 250);
-  --popover-foreground: oklch(0.35 0.02 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.30 0.02 250);
   
-  --primary: oklch(0.72 0.08 240); /* #BFD7EA - Sky Blue (soft and inviting) */
-  --primary-foreground: oklch(0.25 0.02 250); /* Dark text for contrast */
+  --primary: oklch(0.68 0.12 240); /* Vibrant but soft sky blue */
+  --primary-foreground: oklch(1 0 0); /* White text on primary */
   
-  --secondary: oklch(0.88 0.05 290); /* #E8D5F2 - Lavender (elegant accent) */
+  --secondary: oklch(0.85 0.08 290); /* Refined lavender */
   --secondary-foreground: oklch(0.30 0.02 250);
   
-  --muted: oklch(0.94 0.005 250); /* #E5E8EB - Soft gray for subtle backgrounds */
-  --muted-foreground: oklch(0.55 0.015 250); /* Medium gray text */
+  --muted: oklch(0.96 0.003 250); /* Very subtle gray */
+  --muted-foreground: oklch(0.50 0.015 250); /* Refined muted text */
   
-  --accent: oklch(0.78 0.06 150); /* #D7E4D7 - Mint (success, calm) */
-  --accent-foreground: oklch(0.30 0.02 250);
+  --accent: oklch(0.75 0.10 150); /* Refreshed mint */
+  --accent-foreground: oklch(0.25 0.02 250);
   
-  --success: oklch(0.78 0.06 150); /* #D7E4D7 - Mint green */
-  --warning: oklch(0.85 0.08 80); /* Soft yellow-orange */
-  --error: oklch(0.80 0.08 25); /* #F4D8CD - Soft peach/coral for errors */
+  --success: oklch(0.75 0.10 150); /* Mint green */
+  --warning: oklch(0.82 0.12 85); /* Soft amber */
+  --error: oklch(0.75 0.12 30); /* Soft coral */
   
-  --destructive: oklch(0.72 0.12 25); /* Warmer, softer red */
-  --destructive-foreground: oklch(0.25 0.02 250);
+  --destructive: oklch(0.70 0.15 30); /* Refined coral red */
+  --destructive-foreground: oklch(1 0 0);
   
-  --border: oklch(0.91 0.008 250); /* #E5E8EB - Soft borders */
-  --input: oklch(0.96 0.005 250);
-  --ring: oklch(0.72 0.08 240); /* Match primary for focus rings */
+  --border: oklch(0.94 0.005 250); /* Ultra-thin, subtle borders */
+  --input: oklch(0.97 0.003 250);
+  --ring: oklch(0.68 0.12 240); /* Match primary */
   
-  --radius: 0.75rem; /* Slightly more rounded for softer feel */
+  --radius: 0.625rem; /* 10px - refined rounded corners */
   
-  /* Additional pastel accents */
-  --peach: oklch(0.88 0.05 40); /* #F4D8CD - Warm peach */
-  --coral: oklch(0.90 0.04 30); /* #FFE5D9 - Soft coral */
-  --sky: oklch(0.72 0.08 240); /* #BFD7EA - Sky blue */
-  --lavender: oklch(0.88 0.05 290); /* #E8D5F2 - Lavender */
-  --mint: oklch(0.78 0.06 150); /* #D7E4D7 - Mint */
+  /* Refined pastel accents */
+  --peach: oklch(0.85 0.08 45); /* Warm peach */
+  --coral: oklch(0.88 0.06 35); /* Soft coral */
+  --sky: oklch(0.68 0.12 240); /* Sky blue */
+  --lavender: oklch(0.85 0.08 290); /* Lavender */
+  --mint: oklch(0.75 0.10 150); /* Mint */
 }
 
 @theme {
@@ -103,46 +103,46 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease;
+  letter-spacing: -0.011em; /* Refined letter spacing for Inter */
 }
 
-/* Smooth transitions for interactive elements */
+/* Ultra-smooth transitions for all interactive elements */
 button, a, input, select, textarea {
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Custom scrollbar styling for webkit browsers */
+/* Elegant, minimal scrollbar styling */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: oklch(0.96 0.005 250);
-  border-radius: 10px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.85 0.02 250);
+  background: oklch(0.88 0.02 250);
   border-radius: 10px;
   transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.75 0.04 240);
+  background: oklch(0.78 0.06 240);
 }
 
-/* Elegant focus states */
+/* Refined focus states with subtle rings */
 *:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
-/* Smooth animations */
+/* Smooth, elegant animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -153,7 +153,7 @@ button, a, input, select, textarea {
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.97);
   }
   to {
     opacity: 1;
@@ -161,10 +161,39 @@ button, a, input, select, textarea {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out;
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.3s ease-out;
+  animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Elegant elevation system with subtle shadows */
+.elevation-1 {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03), 0 1px 3px 0 rgb(0 0 0 / 0.02);
+}
+
+.elevation-2 {
+  box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.04), 0 4px 6px -1px rgb(0 0 0 / 0.06);
+}
+
+.elevation-3 {
+  box-shadow: 0 4px 6px -2px rgb(0 0 0 / 0.05), 0 8px 12px -4px rgb(0 0 0 / 0.08);
+}
+
+/* Refined glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
 }

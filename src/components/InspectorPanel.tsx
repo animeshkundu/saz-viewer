@@ -104,17 +104,17 @@ export function InspectorPanel({ message, rawMessage, title, statusCode, statusT
   }
 
   return (
-    <div className="h-full flex flex-col bg-card/50 backdrop-blur-sm">
-      <div className="px-4 py-3 border-b border-border/50 bg-gradient-to-r from-card via-primary/5 to-card backdrop-blur-md flex items-center justify-between">
-        <h3 className="font-semibold text-sm text-foreground">{title}</h3>
-        <div className="flex items-center gap-3">
+    <div className="h-full flex flex-col bg-card/30 backdrop-blur-sm">
+      <div className="px-6 py-4 border-b border-border/20 bg-card/20 backdrop-blur-sm flex items-center justify-between">
+        <h3 className="font-semibold text-sm text-foreground tracking-tight">{title}</h3>
+        <div className="flex items-center gap-4">
           {statusCode !== undefined && (
-            <span className={`text-xs font-mono font-bold ${getStatusCodeColor(statusCode)} bg-background/80 px-2 py-1 rounded-md`}>
+            <span className={`text-sm font-mono font-medium ${getStatusCodeColor(statusCode)} bg-background/60 px-3 py-1.5 rounded-lg`}>
               Status: {statusCode} {statusText}
             </span>
           )}
           {contentLength && (
-            <span className="text-xs font-mono text-muted-foreground bg-background/80 px-2 py-1 rounded-md">
+            <span className="text-sm font-mono text-muted-foreground bg-background/60 px-3 py-1.5 rounded-lg">
               Size: {formatBytes(contentLength)}
             </span>
           )}
@@ -122,54 +122,54 @@ export function InspectorPanel({ message, rawMessage, title, statusCode, statusT
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
-        <TabsList className="w-full justify-start rounded-none border-b border-border/50 bg-card/30 backdrop-blur-sm h-auto p-0">
+        <TabsList className="w-full justify-start rounded-none border-b border-border/20 bg-card/10 backdrop-blur-sm h-auto p-0 gap-1">
           <TabsTrigger
             value="headers"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2.5 text-xs font-medium flex items-center gap-2 text-muted-foreground hover:bg-muted/30 transition-all"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary px-5 py-3 text-sm font-medium flex items-center gap-2 text-muted-foreground hover:bg-muted/20 transition-all"
           >
-            <ListBullets size={14} weight="bold" className="shrink-0" />
+            <ListBullets size={16} weight="bold" className="shrink-0" />
             <span>Headers</span>
-            <Badge variant="secondary" className="h-4 px-1.5 text-[10px] font-semibold shrink-0 bg-muted text-muted-foreground hover:bg-muted">
+            <Badge variant="secondary" className="h-5 px-2 text-xs font-semibold shrink-0 bg-muted/60 text-muted-foreground hover:bg-muted/60">
               {message.headers.size}
             </Badge>
           </TabsTrigger>
           <TabsTrigger
             value="raw"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2.5 text-xs font-medium flex items-center gap-2 text-muted-foreground hover:bg-muted/30 transition-all"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary px-5 py-3 text-sm font-medium flex items-center gap-2 text-muted-foreground hover:bg-muted/20 transition-all"
           >
-            <Code size={14} weight="bold" className="shrink-0" />
+            <Code size={16} weight="bold" className="shrink-0" />
             <span>Raw</span>
           </TabsTrigger>
           {shouldShowTab('json') && (
             <TabsTrigger
               value="json"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2.5 text-xs font-medium flex items-center gap-2 text-muted-foreground hover:bg-muted/30 transition-all"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary px-5 py-3 text-sm font-medium flex items-center gap-2 text-muted-foreground hover:bg-muted/20 transition-all"
             >
-              <Code size={14} weight="bold" className="shrink-0" />
+              <Code size={16} weight="bold" className="shrink-0" />
               <span>JSON</span>
             </TabsTrigger>
           )}
           {shouldShowTab('xml') && (
             <TabsTrigger
               value="xml"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2.5 text-xs font-medium flex items-center gap-2 text-muted-foreground hover:bg-muted/30 transition-all"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary px-5 py-3 text-sm font-medium flex items-center gap-2 text-muted-foreground hover:bg-muted/20 transition-all"
             >
-              <FileCode size={14} weight="bold" className="shrink-0" />
+              <FileCode size={16} weight="bold" className="shrink-0" />
               <span>XML</span>
             </TabsTrigger>
           )}
           {shouldShowTab('hexview') && (
             <TabsTrigger
               value="hexview"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2.5 text-xs font-medium flex items-center gap-2 text-muted-foreground hover:bg-muted/30 transition-all"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary px-5 py-3 text-sm font-medium flex items-center gap-2 text-muted-foreground hover:bg-muted/20 transition-all"
             >
-              <FileMagnifyingGlass size={14} weight="bold" className="shrink-0" />
+              <FileMagnifyingGlass size={16} weight="bold" className="shrink-0" />
               <span>Hex</span>
             </TabsTrigger>
           )}
         </TabsList>
 
-        <div className="flex-1 overflow-hidden bg-background/30 backdrop-blur-sm">
+        <div className="flex-1 overflow-hidden bg-background/20 backdrop-blur-sm">
           <TabsContent value="headers" className="h-full m-0 p-0">
             <ScrollArea className="h-full">
               <div className="p-0">
@@ -178,12 +178,12 @@ export function InspectorPanel({ message, rawMessage, title, statusCode, statusT
                     {Array.from(message.headers.entries()).map(([key, value]) => (
                       <TableRow 
                         key={key} 
-                        className="hover:bg-primary/5 transition-colors border-b border-border/30"
+                        className="hover:bg-primary/3 transition-colors border-b border-border/15"
                       >
-                        <TableCell className="font-mono text-xs font-semibold w-[200px] text-foreground py-3 px-4 align-top">
+                        <TableCell className="font-mono text-sm font-medium w-[200px] text-foreground py-4 px-6 align-top">
                           {key}
                         </TableCell>
-                        <TableCell className="font-mono text-xs text-muted-foreground py-3 px-4 break-all">
+                        <TableCell className="font-mono text-sm text-muted-foreground py-4 px-6 break-all">
                           {value}
                         </TableCell>
                       </TableRow>
@@ -196,8 +196,8 @@ export function InspectorPanel({ message, rawMessage, title, statusCode, statusT
 
           <TabsContent value="raw" className="h-full m-0 p-0">
             <ScrollArea className="h-full">
-                    <div className="bg-background/50">
-                      <pre className="p-5 text-xs font-mono whitespace-pre-wrap break-all text-foreground leading-relaxed">
+                    <div className="bg-background/30">
+                      <pre className="p-6 text-sm font-mono whitespace-pre-wrap break-all text-foreground leading-relaxed">
                   {rawMessage}
                 </pre>
               </div>
@@ -207,9 +207,9 @@ export function InspectorPanel({ message, rawMessage, title, statusCode, statusT
           {shouldShowTab('json') && (
             <TabsContent value="json" className="h-full m-0 p-0">
               <ScrollArea className="h-full">
-                <div className="bg-background/50">
+                <div className="bg-background/30">
                   <pre
-                    className="p-5 text-xs font-mono leading-relaxed"
+                    className="p-6 text-sm font-mono leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html: SyntaxUtil.highlight(formatJson(message.rawBody), 'json'),
                     }}
@@ -222,9 +222,9 @@ export function InspectorPanel({ message, rawMessage, title, statusCode, statusT
           {shouldShowTab('xml') && (
             <TabsContent value="xml" className="h-full m-0 p-0">
               <ScrollArea className="h-full">
-                <div className="bg-background/50">
+                <div className="bg-background/30">
                   <pre
-                    className="p-5 text-xs font-mono leading-relaxed"
+                    className="p-6 text-sm font-mono leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html: SyntaxUtil.highlight(message.rawBody, 'xml'),
                     }}
@@ -237,8 +237,8 @@ export function InspectorPanel({ message, rawMessage, title, statusCode, statusT
           {shouldShowTab('hexview') && (
             <TabsContent value="hexview" className="h-full m-0 p-0">
               <ScrollArea className="h-full">
-                <div className="bg-background/50">
-                  <div ref={hexViewRef} className="p-5" />
+                <div className="bg-background/30">
+                  <div ref={hexViewRef} className="p-6" />
                 </div>
               </ScrollArea>
             </TabsContent>

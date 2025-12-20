@@ -191,19 +191,19 @@ export function SessionGrid({
   }
 
   return (
-  <div className="h-full flex flex-col bg-card/50 backdrop-blur-sm border-r border-border/50" data-testid="session-grid">
+  <div className="h-full flex flex-col bg-card/40 backdrop-blur-sm border-r border-border/20" data-testid="session-grid">
       {/* Header with title + controls */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50 bg-gradient-to-r from-card via-primary/5 to-card backdrop-blur-md">
-        <h2 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-          Sessions <span className="text-primary/70 font-bold">({sessionOrder.length})</span>
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-border/20 bg-card/30 backdrop-blur-sm">
+        <h2 className="text-sm font-semibold tracking-tight text-foreground">
+          Sessions <span className="text-muted-foreground font-normal ml-1">({sessionOrder.length})</span>
         </h2>
-        <div className="ml-auto flex items-center gap-2 w-2/3">
+        <div className="ml-auto flex items-center gap-3 flex-1 max-w-md">
           <div className="relative flex-1">
             <Input
-              placeholder="Search..."
+              placeholder="Search sessions..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-8 px-3 text-xs bg-background/80 border-border/50 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 rounded-lg transition-all"
+              className="h-9 px-3 text-sm bg-background/60 border-border/30 focus:ring-1 focus:ring-primary/30 focus:border-primary/30 rounded-lg transition-all"
             />
           </div>
 
@@ -212,21 +212,21 @@ export function SessionGrid({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 px-3 text-xs font-medium bg-background/80 border-border/50 hover:bg-primary/10 hover:border-primary/50 transition-all rounded-lg"
+                className="h-9 px-3 text-sm font-medium bg-background/60 border-border/30 hover:bg-primary/5 hover:border-primary/30 transition-all rounded-lg"
               >
                 Method: {methodFilters.size === 0 ? 'All' : methodFilters.size === 1 ? Array.from(methodFilters)[0] : methodFilters.size}
-                <span className="ml-1.5 text-[10px]">▾</span>
+                <span className="ml-2 text-xs opacity-60">▾</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40 bg-card/95 backdrop-blur-lg border-border/50 shadow-xl">
+            <DropdownMenuContent align="end" className="w-40 bg-card/95 backdrop-blur-xl border-border/30 elevation-2">
               <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">Filter by Method</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-border/50" />
+              <DropdownMenuSeparator className="bg-border/30" />
               {allMethods.map((method) => (
                 <DropdownMenuCheckboxItem
                   key={method}
                   checked={methodFilters.has(method)}
                   onCheckedChange={() => toggleMethodFilter(method)}
-                  className="relative pl-7 pr-2 text-xs font-mono text-foreground data-[state=checked]:bg-primary/10 rounded-md"
+                  className="relative pl-7 pr-2 text-sm font-mono text-foreground data-[state=checked]:bg-primary/8 rounded-md"
                 >
                   {method}
                 </DropdownMenuCheckboxItem>
@@ -239,49 +239,49 @@ export function SessionGrid({
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <table className="w-full border-collapse" style={{ tableLayout: 'fixed' }}>
-            <thead className="sticky top-0 z-10 bg-card/95 backdrop-blur-md border-b border-border/50">
+            <thead className="sticky top-0 z-10 bg-card/90 backdrop-blur-sm border-b border-border/20">
               <tr>
                 <th 
                   style={{ width: `${columnWidths.id}px` }}
-                  className="relative text-left px-3 py-2 text-xs font-semibold text-muted-foreground cursor-pointer hover:text-primary transition-colors select-none"
+                  className="relative text-left px-4 py-3 text-sm font-medium text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none"
                   onClick={() => handleSort('id')}
                 >
                   #{renderSortIcon('id')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/30 active:bg-primary/50 transition-colors"
+                    className="absolute right-0 top-0 bottom-0 w-[1px] cursor-col-resize hover:bg-primary/40 active:bg-primary/60 transition-colors"
                     onMouseDown={(e) => handleMouseDown('id', e)}
                   />
                 </th>
                 <th 
                   style={{ width: `${columnWidths.status}px` }}
-                  className="relative text-left px-3 py-2 text-xs font-semibold text-muted-foreground cursor-pointer hover:text-primary transition-colors select-none"
+                  className="relative text-left px-4 py-3 text-sm font-medium text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none"
                   onClick={() => handleSort('status')}
                 >
                   Status{renderSortIcon('status')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/30 active:bg-primary/50 transition-colors"
+                    className="absolute right-0 top-0 bottom-0 w-[1px] cursor-col-resize hover:bg-primary/40 active:bg-primary/60 transition-colors"
                     onMouseDown={(e) => handleMouseDown('status', e)}
                   />
                 </th>
                 <th 
                   style={{ width: `${columnWidths.method}px` }}
-                  className="relative text-left px-3 py-2 text-xs font-semibold text-muted-foreground cursor-pointer hover:text-primary transition-colors select-none"
+                  className="relative text-left px-4 py-3 text-sm font-medium text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none"
                   onClick={() => handleSort('method')}
                 >
                   Method{renderSortIcon('method')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/30 active:bg-primary/50 transition-colors"
+                    className="absolute right-0 top-0 bottom-0 w-[1px] cursor-col-resize hover:bg-primary/40 active:bg-primary/60 transition-colors"
                     onMouseDown={(e) => handleMouseDown('method', e)}
                   />
                 </th>
                 <th 
                   style={{ width: `${columnWidths.url}px` }}
-                  className="relative text-left px-3 py-2 text-xs font-semibold text-muted-foreground cursor-pointer hover:text-primary transition-colors select-none"
+                  className="relative text-left px-4 py-3 text-sm font-medium text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none"
                   onClick={() => handleSort('url')}
                 >
                   URL{renderSortIcon('url')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/30 active:bg-primary/50 transition-colors"
+                    className="absolute right-0 top-0 bottom-0 w-[1px] cursor-col-resize hover:bg-primary/40 active:bg-primary/60 transition-colors"
                     onMouseDown={(e) => handleMouseDown('url', e)}
                   />
                 </th>
@@ -301,34 +301,34 @@ export function SessionGrid({
                     data-active={isActive}
                     ref={isActive ? activeRowRef : null}
                     onClick={() => onSessionSelected(id)}
-                    className={`group cursor-pointer border-b border-border/30 transition-all duration-200 relative
+                    className={`group cursor-pointer border-b border-border/15 transition-all duration-200 relative
                       ${isActive 
-                        ? 'bg-primary/15 border-l-2 border-l-primary shadow-sm' 
-                        : 'hover:bg-primary/5'
+                        ? 'bg-primary/8 border-l border-l-primary elevation-1' 
+                        : 'hover:bg-muted/30'
                       }
                     `}
                   >
                     <td 
                       style={{ width: `${columnWidths.id}px` }}
-                      className={`px-3 py-2.5 text-xs font-mono text-muted-foreground tabular-nums ${isActive ? 'pl-2.5' : ''}`}
+                      className={`px-4 py-3.5 text-sm font-mono text-muted-foreground tabular-nums ${isActive ? 'pl-3.5' : ''}`}
                     >
                       {id}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.status}px` }}
-                      className={`px-3 py-2.5 text-xs font-mono font-semibold tabular-nums ${getStatusCodeColor(session.response.statusCode)}`}
+                      className={`px-4 py-3.5 text-sm font-mono font-semibold tabular-nums ${getStatusCodeColor(session.response.statusCode)}`}
                     >
                       {session.response.statusCode}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.method}px` }}
-                      className={`px-3 py-2.5 text-xs font-semibold ${getMethodColor(session.method)}`}
+                      className={`px-4 py-3.5 text-sm font-semibold ${getMethodColor(session.method)}`}
                     >
                       {session.method}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.url}px` }}
-                      className="px-3 py-2.5 text-xs font-mono text-foreground/80 truncate"
+                      className="px-4 py-3.5 text-sm font-mono text-foreground/70 truncate"
                       title={session.url}
                     >
                       {session.url}
