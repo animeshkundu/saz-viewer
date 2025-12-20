@@ -70,6 +70,84 @@ npm run build
 npm run preview
 ```
 
+## Testing
+
+This project includes comprehensive test coverage with both unit and E2E tests.
+
+### Unit Tests
+
+Unit tests are written using [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/react).
+
+```bash
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests with UI
+npm run test:ui
+```
+
+**Current Coverage:** 92% overall (80% lines, 75% branches, 70% functions required)
+
+### E2E Tests
+
+End-to-end tests are written using [Playwright](https://playwright.dev/).
+
+```bash
+# Run E2E tests
+npm run e2e
+
+# Run E2E tests in UI mode (interactive)
+npm run e2e:ui
+
+# Run E2E tests in headed mode (visible browser)
+npm run e2e:headed
+
+# Run E2E tests in debug mode
+npm run e2e:debug
+
+# Show test report
+npm run e2e:report
+```
+
+**E2E Test Suites:**
+- **File Upload** - File handling, validation, and error scenarios
+- **Session Navigation** - Session selection, keyboard navigation, filtering
+- **Inspector Panel** - Request/response display, headers, body content
+- **UI Interactions** - Layout, resizing, search, and general UI functionality
+
+### Type Checking
+
+```bash
+# Run TypeScript type checking
+npm run typecheck
+```
+
+### Linting
+
+```bash
+# Run ESLint
+npm run lint
+```
+
+## CI/CD Pipeline
+
+The project uses GitHub Actions for continuous integration and deployment:
+
+1. **Lint** - Code quality checks
+2. **Typecheck** - TypeScript validation
+3. **Build** - Application build
+4. **Unit Tests** - Run with coverage requirements
+5. **E2E Tests** - Playwright browser tests
+6. **Deploy** - Auto-deploy to GitHub Pages (main branch only)
+
+All checks must pass before deployment. See `.github/workflows/ci.yml` for details.
+
 ## License
 
 The Spark Template files and resources from GitHub are licensed under the terms of the MIT license, Copyright GitHub, Inc.

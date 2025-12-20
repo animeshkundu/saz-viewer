@@ -6,11 +6,11 @@ afterEach(() => {
   cleanup()
 })
 
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
+globalThis.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
-}))
+})) as unknown as typeof ResizeObserver
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -43,8 +43,8 @@ class MockTextDecoder {
   }
 }
 
-global.TextEncoder = MockTextEncoder as unknown as typeof TextEncoder
-global.TextDecoder = MockTextDecoder as unknown as typeof TextDecoder
+globalThis.TextEncoder = MockTextEncoder as unknown as typeof TextEncoder
+globalThis.TextDecoder = MockTextDecoder as unknown as typeof TextDecoder
 
 // Mock scrollIntoView
 Element.prototype.scrollIntoView = vi.fn()

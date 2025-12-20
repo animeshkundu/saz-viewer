@@ -31,3 +31,11 @@ packages
 .devcontainer/
 
 coverage/
+
+# Playwright
+playwright-report/
+test-results/
+*.zip
+
+# E2E test fixtures (generated)
+e2e/fixtures/create-sample-saz.ts
