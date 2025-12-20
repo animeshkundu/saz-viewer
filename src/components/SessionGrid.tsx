@@ -159,27 +159,27 @@ export function SessionGrid({
   }, [sessionOrder, sessions, searchTerm, methodFilters, sortField, sortDirection])
 
   const getStatusCodeColor = (statusCode: number): string => {
-    // Pastel status colors
-    if (statusCode >= 200 && statusCode < 300) return 'text-[#5FB878] dark:text-[#7FD49D]' // Soft green
-    if (statusCode >= 300 && statusCode < 400) return 'text-[#6BA3D4] dark:text-[#8BB8E8]' // Soft blue
-    if (statusCode >= 400 && statusCode < 600) return 'text-[#E67E82] dark:text-[#F4A5A8]' // Soft red/coral
+    // Vibrant, clear status colors
+    if (statusCode >= 200 && statusCode < 300) return 'text-success font-semibold'
+    if (statusCode >= 300 && statusCode < 400) return 'text-primary font-semibold'
+    if (statusCode >= 400 && statusCode < 600) return 'text-error font-semibold'
     return 'text-muted-foreground'
   }
 
   const getMethodColor = (method: string): string => {
     switch (method.toUpperCase()) {
       case 'GET':
-        return 'text-[#6BA3D4]' // Sky blue
+        return 'text-method-get'
       case 'POST':
-        return 'text-[#7FD49D]' // Mint green
+        return 'text-method-post'
       case 'PUT':
-        return 'text-[#F4C08B]' // Soft amber
+        return 'text-method-put'
       case 'DELETE':
-        return 'text-[#F4A5A8]' // Soft coral
+        return 'text-method-delete'
       case 'PATCH':
-        return 'text-[#C4A5D8]' // Lavender
+        return 'text-method-patch'
       case 'CONNECT':
-        return 'text-[#8FD4C7]' // Teal
+        return 'text-method-connect'
       default:
         return 'text-muted-foreground'
     }
@@ -191,19 +191,25 @@ export function SessionGrid({
   }
 
   return (
-  <div className="h-full flex flex-col bg-card/40 backdrop-blur-sm border-r border-border/20" data-testid="session-grid">
+  <div className="h-full flex flex-col bg-card/50 backdrop-blur-sm border-r border-border/30" data-testid="session-grid">
       {/* Header with title + controls */}
-      <div className="flex items-center gap-3 px-6 py-4 border-b border-border/20 bg-card/30 backdrop-blur-sm">
-        <h2 className="text-sm font-semibold tracking-tight text-foreground">
-          Sessions <span className="text-muted-foreground font-normal ml-1">({sessionOrder.length})</span>
-        </h2>
-        <div className="ml-auto flex items-center gap-3 flex-1 max-w-md">
-          <div className="relative flex-1">
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-border/30 bg-gradient-to-r from-card/80 via-primary/3 to-card/80 backdrop-blur-sm">
+        <div className="flex-1">
+          <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+            Sessions
+            <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+              {sessionOrder.length}
+            </span>
+          </h2>
+          <p className="text-xs text-muted-foreground">Inspect HTTP requests and responses</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1 min-w-[200px]">
             <Input
               placeholder="Search sessions..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-9 px-3 text-sm bg-background/60 border-border/30 focus:ring-1 focus:ring-primary/30 focus:border-primary/30 rounded-lg transition-all"
+              className="h-9 pl-3 pr-3 text-sm bg-background/80 border-border/40 focus:ring-1 focus:ring-primary/40 focus:border-primary/40 rounded-lg transition-all"
             />
           </div>
 
@@ -212,21 +218,21 @@ export function SessionGrid({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 px-3 text-sm font-medium bg-background/60 border-border/30 hover:bg-primary/5 hover:border-primary/30 transition-all rounded-lg"
+                className="h-9 px-3 text-sm font-medium bg-background/80 border-border/40 hover:bg-primary/8 hover:border-primary/40 transition-all rounded-lg whitespace-nowrap"
               >
-                Method: {methodFilters.size === 0 ? 'All' : methodFilters.size === 1 ? Array.from(methodFilters)[0] : methodFilters.size}
+                {methodFilters.size === 0 ? 'All Methods' : methodFilters.size === 1 ? Array.from(methodFilters)[0] : `${methodFilters.size} Methods`}
                 <span className="ml-2 text-xs opacity-60">▾</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40 bg-card/95 backdrop-blur-xl border-border/30 elevation-2">
+            <DropdownMenuContent align="end" className="w-44 bg-card/95 backdrop-blur-xl border-border/40 elevation-2">
               <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">Filter by Method</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-border/30" />
+              <DropdownMenuSeparator className="bg-border/40" />
               {allMethods.map((method) => (
                 <DropdownMenuCheckboxItem
                   key={method}
                   checked={methodFilters.has(method)}
                   onCheckedChange={() => toggleMethodFilter(method)}
-                  className="relative pl-7 pr-2 text-sm font-mono text-foreground data-[state=checked]:bg-primary/8 rounded-md"
+                  className="relative pl-7 pr-2 text-sm font-mono text-foreground data-[state=checked]:bg-primary/10 rounded-md"
                 >
                   {method}
                 </DropdownMenuCheckboxItem>
@@ -303,32 +309,32 @@ export function SessionGrid({
                     onClick={() => onSessionSelected(id)}
                     className={`group cursor-pointer border-b border-border/15 transition-all duration-200 relative
                       ${isActive 
-                        ? 'bg-primary/8 border-l border-l-primary elevation-1' 
+                        ? 'bg-primary/10 border-l-2 border-l-primary elevation-1' 
                         : 'hover:bg-muted/30'
                       }
                     `}
                   >
                     <td 
                       style={{ width: `${columnWidths.id}px` }}
-                      className={`px-4 py-3.5 text-sm font-mono text-muted-foreground tabular-nums ${isActive ? 'pl-3.5' : ''}`}
+                      className={`px-4 py-3.5 text-sm font-mono text-muted-foreground tabular-nums ${isActive ? 'pl-3.5 font-semibold text-primary' : ''}`}
                     >
                       {id}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.status}px` }}
-                      className={`px-4 py-3.5 text-sm font-mono font-semibold tabular-nums ${getStatusCodeColor(session.response.statusCode)}`}
+                      className={`px-4 py-3.5 text-sm font-mono tabular-nums ${getStatusCodeColor(session.response.statusCode)}`}
                     >
                       {session.response.statusCode}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.method}px` }}
-                      className={`px-4 py-3.5 text-sm font-semibold ${getMethodColor(session.method)}`}
+                      className={`px-4 py-3.5 text-sm font-bold ${getMethodColor(session.method)}`}
                     >
                       {session.method}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.url}px` }}
-                      className="px-4 py-3.5 text-sm font-mono text-foreground/70 truncate"
+                      className={`px-4 py-3.5 text-sm font-mono truncate ${isActive ? 'text-foreground font-medium' : 'text-foreground/70'}`}
                       title={session.url}
                     >
                       {session.url}

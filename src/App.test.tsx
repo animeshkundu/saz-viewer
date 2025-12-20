@@ -34,7 +34,7 @@ describe('App Integration Tests', () => {
     render(<App />)
     
     expect(screen.getByText('SAZ Viewer')).toBeInTheDocument()
-    expect(screen.getByText('Load SAZ File')).toBeInTheDocument()
+    expect(screen.getByText('Choose File')).toBeInTheDocument()
   })
 
   it('should show error for non-saz file', async () => {
@@ -169,7 +169,7 @@ describe('App Integration Tests', () => {
     fireEvent.click(loadNewButton)
     
     await waitFor(() => {
-      expect(screen.getByText(/Drop a/)).toBeInTheDocument()
+      expect(screen.getByText(/Drop your/i)).toBeInTheDocument()
     })
   })
 

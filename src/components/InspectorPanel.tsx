@@ -96,10 +96,10 @@ export function InspectorPanel({ message, rawMessage, title, statusCode, statusT
   }
 
   const getStatusCodeColor = (statusCode: number): string => {
-    // Pastel status colors
-    if (statusCode >= 200 && statusCode < 300) return 'text-[#5FB878]' // Soft green
-    if (statusCode >= 300 && statusCode < 400) return 'text-[#6BA3D4]' // Soft blue
-    if (statusCode >= 400 && statusCode < 600) return 'text-[#E67E82]' // Soft red/coral
+    // Vibrant, clear status colors
+    if (statusCode >= 200 && statusCode < 300) return 'text-success'
+    if (statusCode >= 300 && statusCode < 400) return 'text-primary'
+    if (statusCode >= 400 && statusCode < 600) return 'text-error'
     return 'text-muted-foreground'
   }
 
