@@ -166,7 +166,7 @@ describe('InspectorPanel', () => {
       />
     )
 
-    const statusElement = container.querySelector('.text-emerald-600')
+    const statusElement = container.querySelector('.text-\\[\\#5FB878\\]')
     expect(statusElement).toBeInTheDocument()
   })
 
@@ -181,7 +181,7 @@ describe('InspectorPanel', () => {
       />
     )
 
-    const statusElement = container.querySelector('.text-blue-600')
+    const statusElement = container.querySelector('.text-\\[\\#6BA3D4\\]')
     expect(statusElement).toBeInTheDocument()
   })
 
@@ -196,8 +196,8 @@ describe('InspectorPanel', () => {
       />
     )
 
-    // component treats 4xx as error range and uses red color
-    const statusElement = container.querySelector('.text-red-600')
+    // component treats 4xx as error range and uses soft coral color
+    const statusElement = container.querySelector('.text-\\[\\#E67E82\\]')
     expect(statusElement).toBeInTheDocument()
   })
 
@@ -212,7 +212,7 @@ describe('InspectorPanel', () => {
       />
     )
 
-    const statusElement = container.querySelector('.text-red-600')
+    const statusElement = container.querySelector('.text-\\[\\#E67E82\\]')
     expect(statusElement).toBeInTheDocument()
   })
 

@@ -195,7 +195,7 @@ describe('App Integration Tests', () => {
     window.dispatchEvent(downEvent)
     
     await waitFor(() => {
-      const activeCells = document.querySelectorAll('.bg-blue-50')
+      const activeCells = document.querySelectorAll('[data-active="true"]')
       expect(activeCells.length).toBeGreaterThan(0)
     })
   })
@@ -224,7 +224,7 @@ describe('App Integration Tests', () => {
     window.dispatchEvent(upEvent)
     
     await waitFor(() => {
-      const activeCells = document.querySelectorAll('.bg-blue-50')
+      const activeCells = document.querySelectorAll('[data-active="true"]')
       expect(activeCells.length).toBeGreaterThan(0)
     })
   })
@@ -254,7 +254,7 @@ describe('App Integration Tests', () => {
     window.dispatchEvent(downEvent)
     
     await waitFor(() => {
-      const activeCells = document.querySelectorAll('.bg-blue-50')
+      const activeCells = document.querySelectorAll('[data-active="true"]')
       expect(activeCells.length).toBeGreaterThan(0)
     })
   })

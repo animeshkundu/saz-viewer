@@ -159,28 +159,29 @@ export function SessionGrid({
   }, [sessionOrder, sessions, searchTerm, methodFilters, sortField, sortDirection])
 
   const getStatusCodeColor = (statusCode: number): string => {
-    if (statusCode >= 200 && statusCode < 300) return 'text-emerald-600'
-    if (statusCode >= 300 && statusCode < 400) return 'text-blue-600'
-    if (statusCode >= 400 && statusCode < 600) return 'text-red-600'
-    return 'text-neutral-500'
+    // Pastel status colors
+    if (statusCode >= 200 && statusCode < 300) return 'text-[#5FB878] dark:text-[#7FD49D]' // Soft green
+    if (statusCode >= 300 && statusCode < 400) return 'text-[#6BA3D4] dark:text-[#8BB8E8]' // Soft blue
+    if (statusCode >= 400 && statusCode < 600) return 'text-[#E67E82] dark:text-[#F4A5A8]' // Soft red/coral
+    return 'text-muted-foreground'
   }
 
   const getMethodColor = (method: string): string => {
     switch (method.toUpperCase()) {
       case 'GET':
-        return 'text-blue-600'
+        return 'text-[#6BA3D4]' // Sky blue
       case 'POST':
-        return 'text-green-600'
+        return 'text-[#7FD49D]' // Mint green
       case 'PUT':
-        return 'text-amber-600'
+        return 'text-[#F4C08B]' // Soft amber
       case 'DELETE':
-        return 'text-red-600'
+        return 'text-[#F4A5A8]' // Soft coral
       case 'PATCH':
-        return 'text-purple-600'
+        return 'text-[#C4A5D8]' // Lavender
       case 'CONNECT':
-        return 'text-teal-600'
+        return 'text-[#8FD4C7]' // Teal
       default:
-        return 'text-neutral-500'
+        return 'text-muted-foreground'
     }
   }
 
@@ -190,11 +191,11 @@ export function SessionGrid({
   }
 
   return (
-  <div className="h-full flex flex-col bg-white border-r border-neutral-200" data-testid="session-grid">
+  <div className="h-full flex flex-col bg-card/50 backdrop-blur-sm border-r border-border/50" data-testid="session-grid">
       {/* Header with title + controls */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-neutral-200 bg-white">
-        <h2 className="text-[11px] font-semibold tracking-wide text-neutral-700 uppercase">
-          Sessions <span className="text-neutral-400">({sessionOrder.length})</span>
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50 bg-gradient-to-r from-card via-primary/5 to-card backdrop-blur-md">
+        <h2 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+          Sessions <span className="text-primary/70 font-bold">({sessionOrder.length})</span>
         </h2>
         <div className="ml-auto flex items-center gap-2 w-2/3">
           <div className="relative flex-1">
@@ -202,7 +203,7 @@ export function SessionGrid({
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-7 px-2 text-[11px] bg-white border-neutral-300 focus:ring-0 focus:border-neutral-400"
+              className="h-8 px-3 text-xs bg-background/80 border-border/50 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 rounded-lg transition-all"
             />
           </div>
 
@@ -211,21 +212,21 @@ export function SessionGrid({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-7 px-2 text-[11px] font-medium bg-white border-neutral-300 hover:bg-neutral-100 hover:text-neutral-700"
+                className="h-8 px-3 text-xs font-medium bg-background/80 border-border/50 hover:bg-primary/10 hover:border-primary/50 transition-all rounded-lg"
               >
                 Method: {methodFilters.size === 0 ? 'All' : methodFilters.size === 1 ? Array.from(methodFilters)[0] : methodFilters.size}
-                <span className="ml-1 text-[10px]">▾</span>
+                <span className="ml-1.5 text-[10px]">▾</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40 bg-white border-neutral-300">
-              <DropdownMenuLabel className="text-[11px] font-semibold text-neutral-600">Filter by Method</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-neutral-200" />
+            <DropdownMenuContent align="end" className="w-40 bg-card/95 backdrop-blur-lg border-border/50 shadow-xl">
+              <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">Filter by Method</DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-border/50" />
               {allMethods.map((method) => (
                 <DropdownMenuCheckboxItem
                   key={method}
                   checked={methodFilters.has(method)}
                   onCheckedChange={() => toggleMethodFilter(method)}
-                  className="relative pl-6 pr-2 text-[11px] font-mono text-neutral-700 data-[state=checked]:bg-neutral-100"
+                  className="relative pl-7 pr-2 text-xs font-mono text-foreground data-[state=checked]:bg-primary/10 rounded-md"
                 >
                   {method}
                 </DropdownMenuCheckboxItem>
@@ -238,49 +239,49 @@ export function SessionGrid({
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <table className="w-full border-collapse" style={{ tableLayout: 'fixed' }}>
-            <thead className="sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-neutral-200">
+            <thead className="sticky top-0 z-10 bg-card/95 backdrop-blur-md border-b border-border/50">
               <tr>
                 <th 
                   style={{ width: `${columnWidths.id}px` }}
-                  className="relative text-left px-2 py-1.5 text-[11px] font-medium text-neutral-500 cursor-pointer hover:text-neutral-700 select-none"
+                  className="relative text-left px-3 py-2 text-xs font-semibold text-muted-foreground cursor-pointer hover:text-primary transition-colors select-none"
                   onClick={() => handleSort('id')}
                 >
                   #{renderSortIcon('id')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-neutral-300 active:bg-neutral-400"
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/30 active:bg-primary/50 transition-colors"
                     onMouseDown={(e) => handleMouseDown('id', e)}
                   />
                 </th>
                 <th 
                   style={{ width: `${columnWidths.status}px` }}
-                  className="relative text-left px-2 py-1.5 text-[11px] font-medium text-neutral-500 cursor-pointer hover:text-neutral-700 select-none"
+                  className="relative text-left px-3 py-2 text-xs font-semibold text-muted-foreground cursor-pointer hover:text-primary transition-colors select-none"
                   onClick={() => handleSort('status')}
                 >
                   Status{renderSortIcon('status')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-neutral-300 active:bg-neutral-400"
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/30 active:bg-primary/50 transition-colors"
                     onMouseDown={(e) => handleMouseDown('status', e)}
                   />
                 </th>
                 <th 
                   style={{ width: `${columnWidths.method}px` }}
-                  className="relative text-left px-2 py-1.5 text-[11px] font-medium text-neutral-500 cursor-pointer hover:text-neutral-700 select-none"
+                  className="relative text-left px-3 py-2 text-xs font-semibold text-muted-foreground cursor-pointer hover:text-primary transition-colors select-none"
                   onClick={() => handleSort('method')}
                 >
                   Method{renderSortIcon('method')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-neutral-300 active:bg-neutral-400"
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/30 active:bg-primary/50 transition-colors"
                     onMouseDown={(e) => handleMouseDown('method', e)}
                   />
                 </th>
                 <th 
                   style={{ width: `${columnWidths.url}px` }}
-                  className="relative text-left px-2 py-1.5 text-[11px] font-medium text-neutral-500 cursor-pointer hover:text-neutral-700 select-none"
+                  className="relative text-left px-3 py-2 text-xs font-semibold text-muted-foreground cursor-pointer hover:text-primary transition-colors select-none"
                   onClick={() => handleSort('url')}
                 >
                   URL{renderSortIcon('url')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-neutral-300 active:bg-neutral-400"
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/30 active:bg-primary/50 transition-colors"
                     onMouseDown={(e) => handleMouseDown('url', e)}
                   />
                 </th>
@@ -300,34 +301,34 @@ export function SessionGrid({
                     data-active={isActive}
                     ref={isActive ? activeRowRef : null}
                     onClick={() => onSessionSelected(id)}
-                    className={`group cursor-pointer border-b border-neutral-200 transition-colors relative
+                    className={`group cursor-pointer border-b border-border/30 transition-all duration-200 relative
                       ${isActive 
-                        ? 'bg-blue-50 border-l-2 border-l-blue-500' 
-                        : 'hover:bg-blue-50/50'
+                        ? 'bg-primary/15 border-l-2 border-l-primary shadow-sm' 
+                        : 'hover:bg-primary/5'
                       }
                     `}
                   >
                     <td 
                       style={{ width: `${columnWidths.id}px` }}
-                      className={`px-2 py-1.5 text-[11px] font-mono text-neutral-500 tabular-nums ${isActive ? 'pl-1.5' : ''}`}
+                      className={`px-3 py-2.5 text-xs font-mono text-muted-foreground tabular-nums ${isActive ? 'pl-2.5' : ''}`}
                     >
                       {id}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.status}px` }}
-                      className={`px-2 py-1.5 text-[11px] font-mono font-semibold tabular-nums ${getStatusCodeColor(session.response.statusCode)}`}
+                      className={`px-3 py-2.5 text-xs font-mono font-semibold tabular-nums ${getStatusCodeColor(session.response.statusCode)}`}
                     >
                       {session.response.statusCode}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.method}px` }}
-                      className={`px-2 py-1.5 text-[11px] font-semibold ${getMethodColor(session.method)}`}
+                      className={`px-3 py-2.5 text-xs font-semibold ${getMethodColor(session.method)}`}
                     >
                       {session.method}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.url}px` }}
-                      className="px-2 py-1.5 text-[11px] font-mono text-neutral-700 truncate"
+                      className="px-3 py-2.5 text-xs font-mono text-foreground/80 truncate"
                       title={session.url}
                     >
                       {session.url}

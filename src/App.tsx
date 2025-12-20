@@ -89,14 +89,17 @@ function App() {
 
   return (
     <>
-      <div className="h-screen w-screen bg-background flex flex-col">
-        <header className="border-b bg-card px-6 py-2.5 shrink-0 shadow-sm">
-          <div className="flex items-center justify-between">
+      <div className="h-screen w-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 flex flex-col">
+        <header className="border-b border-border/50 bg-gradient-to-r from-card/95 via-primary/5 to-secondary/5 backdrop-blur-lg px-6 py-3 shrink-0 shadow-lg relative">
+          {/* Subtle animated gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-md bg-accent/10 border border-accent/20 flex items-center justify-center">
-                <span className="text-accent font-bold text-xs">SAZ</span>
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary border border-primary/20 flex items-center justify-center shadow-md hover:shadow-lg transition-all hover:scale-105">
+                <span className="text-primary-foreground font-bold text-sm">SAZ</span>
               </div>
-              <h1 className="text-base font-semibold">SAZ Viewer</h1>
+              <h1 className="text-lg font-semibold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">SAZ Viewer</h1>
             </div>
             <Button
               data-testid="load-new-file-button"
@@ -107,9 +110,9 @@ function App() {
                 setActiveSessionId(null)
                 setError(null)
               }}
-              className="gap-2 h-8"
+              className="gap-2 h-9 shadow-md hover:shadow-lg transition-all hover:scale-105 bg-gradient-to-r from-primary to-primary/90"
             >
-              <FolderOpen size={16} />
+              <FolderOpen size={16} weight="bold" />
               Load New File
             </Button>
           </div>
@@ -126,7 +129,7 @@ function App() {
               />
             </ResizablePanel>
 
-            <ResizableHandle withHandle className="w-1 bg-border/50 hover:bg-accent/30 transition-colors" />
+            <ResizableHandle withHandle className="w-1.5 bg-gradient-to-b from-primary/20 via-border to-secondary/20 hover:bg-gradient-to-b hover:from-primary/40 hover:via-primary/30 hover:to-secondary/40 transition-all duration-300" />
 
             <ResizablePanel defaultSize={75} minSize={30}>
               {activeSession ? (
@@ -139,7 +142,7 @@ function App() {
                     />
                   </ResizablePanel>
 
-                  <ResizableHandle withHandle className="h-1 bg-border/50 hover:bg-accent/30 transition-colors" />
+                  <ResizableHandle withHandle className="h-1.5 bg-gradient-to-r from-primary/20 via-border to-secondary/20 hover:bg-gradient-to-r hover:from-primary/40 hover:via-primary/30 hover:to-secondary/40 transition-all duration-300" />
 
                   <ResizablePanel defaultSize={50} minSize={20}>
                     <InspectorPanel

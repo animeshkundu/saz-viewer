@@ -8,26 +8,47 @@
 }
 
 :root {
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.20 0.015 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.015 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.015 250);
-  --primary: oklch(0.25 0.02 250);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.96 0.005 250);
-  --secondary-foreground: oklch(0.25 0.02 250);
-  --muted: oklch(0.97 0.005 250);
-  --muted-foreground: oklch(0.50 0.01 250);
-  --accent: oklch(0.58 0.20 265);
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.92 0.005 250);
-  --input: oklch(0.92 0.005 250);
-  --ring: oklch(0.58 0.20 265);
-  --radius: 0.5rem;
+  /* Pastel Serenity Theme - Soft, elegant, and approachable */
+  --background: oklch(0.985 0.003 250); /* #FAFBFC - Off white with hint of blue */
+  --foreground: oklch(0.35 0.02 250); /* Softer dark text for reduced eye strain */
+  
+  --card: oklch(0.995 0.002 250); /* #FFFFFF with subtle warmth */
+  --card-foreground: oklch(0.35 0.02 250);
+  
+  --popover: oklch(0.995 0.002 250);
+  --popover-foreground: oklch(0.35 0.02 250);
+  
+  --primary: oklch(0.72 0.08 240); /* #BFD7EA - Sky Blue (soft and inviting) */
+  --primary-foreground: oklch(0.25 0.02 250); /* Dark text for contrast */
+  
+  --secondary: oklch(0.88 0.05 290); /* #E8D5F2 - Lavender (elegant accent) */
+  --secondary-foreground: oklch(0.30 0.02 250);
+  
+  --muted: oklch(0.94 0.005 250); /* #E5E8EB - Soft gray for subtle backgrounds */
+  --muted-foreground: oklch(0.55 0.015 250); /* Medium gray text */
+  
+  --accent: oklch(0.78 0.06 150); /* #D7E4D7 - Mint (success, calm) */
+  --accent-foreground: oklch(0.30 0.02 250);
+  
+  --success: oklch(0.78 0.06 150); /* #D7E4D7 - Mint green */
+  --warning: oklch(0.85 0.08 80); /* Soft yellow-orange */
+  --error: oklch(0.80 0.08 25); /* #F4D8CD - Soft peach/coral for errors */
+  
+  --destructive: oklch(0.72 0.12 25); /* Warmer, softer red */
+  --destructive-foreground: oklch(0.25 0.02 250);
+  
+  --border: oklch(0.91 0.008 250); /* #E5E8EB - Soft borders */
+  --input: oklch(0.96 0.005 250);
+  --ring: oklch(0.72 0.08 240); /* Match primary for focus rings */
+  
+  --radius: 0.75rem; /* Slightly more rounded for softer feel */
+  
+  /* Additional pastel accents */
+  --peach: oklch(0.88 0.05 40); /* #F4D8CD - Warm peach */
+  --coral: oklch(0.90 0.04 30); /* #FFE5D9 - Soft coral */
+  --sky: oklch(0.72 0.08 240); /* #BFD7EA - Sky blue */
+  --lavender: oklch(0.88 0.05 290); /* #E8D5F2 - Lavender */
+  --mint: oklch(0.78 0.06 150); /* #D7E4D7 - Mint */
 }
 
 @theme {
@@ -50,6 +71,16 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  
+  /* Additional pastel colors */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-peach: var(--peach);
+  --color-coral: var(--coral);
+  --color-sky: var(--sky);
+  --color-lavender: var(--lavender);
+  --color-mint: var(--mint);
 
   --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-family-mono: 'JetBrains Mono', 'Courier New', monospace;
@@ -71,4 +102,69 @@ body {
   font-feature-settings: "cv11", "ss01";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease;
+}
+
+/* Smooth transitions for interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.2s ease;
+}
+
+/* Custom scrollbar styling for webkit browsers */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: oklch(0.96 0.005 250);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.85 0.02 250);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.75 0.04 240);
+}
+
+/* Elegant focus states */
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
 }
