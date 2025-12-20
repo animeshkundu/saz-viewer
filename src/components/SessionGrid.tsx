@@ -190,7 +190,7 @@ export function SessionGrid({
   }
 
   return (
-  <div className="h-full flex flex-col bg-white border-r border-neutral-200">
+  <div className="h-full flex flex-col bg-white border-r border-neutral-200" data-testid="session-grid">
       {/* Header with title + controls */}
       <div className="flex items-center gap-2 px-3 py-2 border-b border-neutral-200 bg-white">
         <h2 className="text-[11px] font-semibold tracking-wide text-neutral-700 uppercase">
@@ -296,6 +296,8 @@ export function SessionGrid({
                 return (
                   <tr
                     key={id}
+                    data-testid={`session-${id}`}
+                    data-active={isActive}
                     ref={isActive ? activeRowRef : null}
                     onClick={() => onSessionSelected(id)}
                     className={`group cursor-pointer border-b border-neutral-200 transition-colors relative
