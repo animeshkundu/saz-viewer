@@ -6,11 +6,14 @@ afterEach(() => {
   cleanup()
 })
 
-globalThis.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-})) as unknown as typeof ResizeObserver
+class ResizeObserverMock {
+  constructor(_: ResizeObserverCallback) {}
+  observe = vi.fn()
+  unobserve = vi.fn()
+  disconnect = vi.fn()
+}
+
+globalThis.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

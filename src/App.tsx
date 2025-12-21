@@ -71,7 +71,7 @@ function App() {
   if (!sazArchive) {
     return (
       <>
-        <div className="h-screen w-screen bg-background">
+        <div className="min-h-screen w-screen">
           <FileDropZone
             isLoading={isLoading}
             error={error}
@@ -89,78 +89,95 @@ function App() {
 
   return (
     <>
-      <div className="h-screen w-screen bg-background flex flex-col">
-        <header className="border-b bg-card px-6 py-2.5 shrink-0 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-md bg-accent/10 border border-accent/20 flex items-center justify-center">
-                <span className="text-accent font-bold text-xs">SAZ</span>
-              </div>
-              <h1 className="text-base font-semibold">SAZ Viewer</h1>
-            </div>
-            <Button
-              data-testid="load-new-file-button"
-              variant="default"
-              size="sm"
-              onClick={() => {
-                setSazArchive(null)
-                setActiveSessionId(null)
-                setError(null)
-              }}
-              className="gap-2 h-8"
-            >
-              <FolderOpen size={16} />
-              Load New File
-            </Button>
-          </div>
-        </header>
-
-        <div className="flex-1 overflow-hidden">
-          <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
-              <SessionGrid
-                sessions={sazArchive.sessions}
-                sessionOrder={sazArchive.sessionOrder}
-                activeSessionId={activeSessionId}
-                onSessionSelected={handleSessionSelected}
-              />
-            </ResizablePanel>
-
-            <ResizableHandle withHandle className="w-1 bg-border/50 hover:bg-accent/30 transition-colors" />
-
-            <ResizablePanel defaultSize={75} minSize={30}>
-              {activeSession ? (
-                <ResizablePanelGroup direction="vertical">
-                  <ResizablePanel defaultSize={50} minSize={20}>
-                    <InspectorPanel
-                      message={activeSession.request}
-                      rawMessage={activeSession.rawClient}
-                      title="Request"
-                    />
-                  </ResizablePanel>
-
-                  <ResizableHandle withHandle className="h-1 bg-border/50 hover:bg-accent/30 transition-colors" />
-
-                  <ResizablePanel defaultSize={50} minSize={20}>
-                    <InspectorPanel
-                      message={activeSession.response}
-                      rawMessage={activeSession.rawServer}
-                      title="Response"
-                      statusCode={activeSession.response.statusCode}
-                      statusText={activeSession.response.statusText}
-                    />
-                  </ResizablePanel>
-                </ResizablePanelGroup>
-              ) : (
-                <div className="h-full flex items-center justify-center text-center p-8">
-                  <div className="space-y-2">
-                    <p className="text-muted-foreground text-sm">Select a session to view details</p>
-                    <p className="text-muted-foreground/60 text-xs">Request and response data will appear here</p>
-                  </div>
+      <div className="min-h-screen w-screen bg-[radial-gradient(circle_at_10%_20%,rgba(59,130,246,0.14),transparent_38%),radial-gradient(circle_at_90%_15%,rgba(16,185,129,0.12),transparent_32%)] bg-slate-50/50 text-foreground">
+        <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-4 px-6 py-5">
+          <header className="shrink-0 rounded-2xl border border-white/60 bg-white/80 px-5 py-4 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur-lg">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-accent/30 bg-accent/10 text-accent shadow-inner">
+                  <span className="text-sm font-bold">SAZ</span>
                 </div>
-              )}
-            </ResizablePanel>
-          </ResizablePanelGroup>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-lg font-semibold leading-tight">SAZ Viewer</h1>
+                    <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
+                      Live preview
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Inspect Fiddler archives without leaving the browser.</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span className="hidden items-center gap-2 rounded-full border border-border/70 bg-muted/40 px-3 py-1 text-[11px] font-semibold text-muted-foreground sm:inline-flex">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  {sazArchive.sessionOrder.length} records processed
+                </span>
+                <Button
+                  data-testid="load-new-file-button"
+                  variant="default"
+                  size="sm"
+                  onClick={() => {
+                    setSazArchive(null)
+                    setActiveSessionId(null)
+                    setError(null)
+                  }}
+                  className="gap-2 h-9 rounded-full shadow-sm"
+                >
+                  <FolderOpen size={16} />
+                  Load New File
+                </Button>
+              </div>
+            </div>
+          </header>
+
+          <div className="flex-1 overflow-hidden rounded-2xl border border-white/60 bg-white/75 shadow-[0_24px_90px_rgba(15,23,42,0.12)] backdrop-blur-xl">
+            <ResizablePanelGroup direction="horizontal" className="h-full">
+              <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
+                <SessionGrid
+                  sessions={sazArchive.sessions}
+                  sessionOrder={sazArchive.sessionOrder}
+                  activeSessionId={activeSessionId}
+                  onSessionSelected={handleSessionSelected}
+                />
+              </ResizablePanel>
+
+              <ResizableHandle withHandle className="w-1 bg-gradient-to-b from-transparent via-border to-transparent hover:via-accent/40 transition-colors" />
+
+              <ResizablePanel defaultSize={75} minSize={30}>
+                {activeSession ? (
+                  <ResizablePanelGroup direction="vertical" className="h-full">
+                    <ResizablePanel defaultSize={50} minSize={20}>
+                      <InspectorPanel
+                        message={activeSession.request}
+                        rawMessage={activeSession.rawClient}
+                        title="Request"
+                      />
+                    </ResizablePanel>
+
+                    <ResizableHandle withHandle className="h-1 bg-gradient-to-r from-transparent via-border to-transparent hover:via-accent/40 transition-colors" />
+
+                    <ResizablePanel defaultSize={50} minSize={20}>
+                      <InspectorPanel
+                        message={activeSession.response}
+                        rawMessage={activeSession.rawServer}
+                        title="Response"
+                        statusCode={activeSession.response.statusCode}
+                        statusText={activeSession.response.statusText}
+                      />
+                    </ResizablePanel>
+                  </ResizablePanelGroup>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-center p-10 bg-gradient-to-br from-white via-slate-50 to-slate-100">
+                    <div className="space-y-2">
+                      <p className="text-muted-foreground text-sm">Select a session to view details</p>
+                      <p className="text-muted-foreground/60 text-xs">Request and response data will appear here</p>
+                    </div>
+                  </div>
+                )}
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </div>
         </div>
       </div>
       <KeyboardShortcuts

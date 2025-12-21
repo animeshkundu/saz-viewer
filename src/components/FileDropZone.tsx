@@ -54,16 +54,16 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12 bg-[radial-gradient(circle_at_10%_20%,rgba(59,130,246,0.12),transparent_38%),radial-gradient(circle_at_85%_15%,rgba(16,185,129,0.12),transparent_30%)] bg-background text-foreground">
       <div
         data-testid="file-drop-zone"
         className={`
-          w-full max-w-2xl border-2 border-dashed rounded-xl p-16
-          transition-all duration-200
+          w-full max-w-3xl border-2 border-dashed rounded-2xl p-14
+          transition-all duration-300 shadow-[0_24px_80px_rgba(15,23,42,0.10)] backdrop-blur-xl
           ${
             isDragOver 
-              ? 'border-accent bg-accent/10 shadow-lg shadow-accent/10 scale-[1.02]' 
-              : 'border-border/60 bg-card/50 backdrop-blur-sm shadow-md hover:border-accent/50 hover:shadow-lg'
+              ? 'border-accent bg-accent/10 shadow-accent/20 scale-[1.02]' 
+              : 'border-border/70 bg-white/70 hover:border-accent/50 hover:shadow-xl'
           }
           ${isLoading ? 'opacity-50 pointer-events-none' : ''}
         `}
@@ -71,10 +71,14 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <div className="flex flex-col items-center gap-6 text-center">
+        <div className="flex flex-col items-center gap-7 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-1 text-[11px] font-semibold text-accent">
+            <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+            Client-side & private
+          </div>
           <div className={`
             transition-all duration-200
-            ${isDragOver ? 'scale-110 text-accent' : 'text-muted-foreground'}
+            ${isDragOver ? 'scale-110 text-accent drop-shadow-[0_8px_20px_rgba(59,130,246,0.25)]' : 'text-muted-foreground'}
           `}>
             <FileArchive
               size={72}
@@ -89,7 +93,7 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
             <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
               Drop a <code className="px-1.5 py-0.5 bg-muted/60 rounded text-accent font-mono text-xs">.saz</code> file here or click the button below to load a Fiddler archive.
             </p>
-            <p className="text-xs text-muted-foreground/70">
+            <p className="text-xs text-muted-foreground/80">
               All parsing happens locally in your browser—no data is uploaded.
             </p>
           </div>
@@ -99,11 +103,23 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
             onClick={handleButtonClick}
             disabled={isLoading}
             size="lg"
-            className="gap-2.5 shadow-md hover:shadow-lg transition-all"
+            className="gap-2.5 shadow-md hover:shadow-xl transition-all rounded-full px-6"
           >
             <UploadSimple size={20} weight="bold" />
             {isLoading ? 'Loading...' : 'Load SAZ File'}
           </Button>
+
+          <div className="grid w-full max-w-2xl grid-cols-1 gap-3 text-[11px] text-muted-foreground/80 sm:grid-cols-3">
+            <div className="rounded-xl border border-border/70 bg-muted/30 px-4 py-3 shadow-inner">
+              Zero server calls, everything stays in-browser.
+            </div>
+            <div className="rounded-xl border border-border/70 bg-muted/30 px-4 py-3 shadow-inner">
+              Supports drag & drop or manual selection.
+            </div>
+            <div className="rounded-xl border border-border/70 bg-muted/30 px-4 py-3 shadow-inner">
+              Designed for Fiddler <code className="font-mono">.saz</code> archives.
+            </div>
+          </div>
 
           <input
             ref={fileInputRef}
