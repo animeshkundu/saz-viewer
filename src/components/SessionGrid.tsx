@@ -303,7 +303,7 @@ export function SessionGrid({
                     className={`group cursor-pointer border-b border-neutral-200 transition-colors relative
                       ${isActive 
                         ? 'bg-blue-50 border-l-2 border-l-blue-500' 
-                        : 'hover:bg-blue-50/50'
+                        : 'hover:bg-blue-50'
                       }
                     `}
                   >

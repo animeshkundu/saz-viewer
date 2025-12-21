@@ -54,7 +54,7 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-slate-800">
       <div
         data-testid="file-drop-zone"
         className={`
@@ -62,8 +62,8 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
           transition-all duration-200
           ${
             isDragOver 
-              ? 'border-accent bg-accent/10 shadow-lg shadow-accent/10 scale-[1.02]' 
-              : 'border-border/60 bg-card/50 backdrop-blur-sm shadow-md hover:border-accent/50 hover:shadow-lg'
+              ? 'border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/20 scale-[1.02]' 
+              : 'border-slate-600 bg-slate-700/50 backdrop-blur-sm shadow-md hover:border-blue-500/50 hover:shadow-lg'
           }
           ${isLoading ? 'opacity-50 pointer-events-none' : ''}
         `}
@@ -74,7 +74,7 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
         <div className="flex flex-col items-center gap-6 text-center">
           <div className={`
             transition-all duration-200
-            ${isDragOver ? 'scale-110 text-accent' : 'text-muted-foreground'}
+            ${isDragOver ? 'scale-110 text-blue-500' : 'text-slate-400'}
           `}>
             <FileArchive
               size={72}
@@ -83,13 +83,13 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
           </div>
           
           <div className="space-y-3">
-            <h2 className="text-2xl font-bold bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold text-white">
               SAZ Viewer
             </h2>
-            <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-              Drop a <code className="px-1.5 py-0.5 bg-muted/60 rounded text-accent font-mono text-xs">.saz</code> file here or click the button below to load a Fiddler archive.
+            <p className="text-sm text-slate-300 max-w-md leading-relaxed">
+              Drop a <code className="px-1.5 py-0.5 bg-slate-600/60 rounded text-blue-400 font-mono text-xs">.saz</code> file here or click the button below to load a Fiddler archive.
             </p>
-            <p className="text-xs text-muted-foreground/70">
+            <p className="text-xs text-slate-400">
               All parsing happens locally in your browser—no data is uploaded.
             </p>
           </div>
@@ -99,10 +99,10 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
             onClick={handleButtonClick}
             disabled={isLoading}
             size="lg"
-            className="gap-2.5 shadow-md hover:shadow-lg transition-all"
+            className="gap-2.5 shadow-md hover:shadow-lg transition-all bg-blue-600 hover:bg-blue-700 text-white"
           >
             <UploadSimple size={20} weight="bold" />
-            {isLoading ? 'Loading...' : 'Load SAZ File'}
+            {isLoading ? 'Loading...' : 'Select File'}
           </Button>
 
           <input

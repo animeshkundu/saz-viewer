@@ -89,12 +89,12 @@ function App() {
 
   return (
     <>
-      <div className="h-screen w-screen bg-background flex flex-col">
-        <header className="border-b bg-card px-6 py-2.5 shrink-0 shadow-sm">
+      <div className="h-screen w-screen bg-slate-50 flex flex-col">
+        <header className="border-b bg-white px-6 py-2.5 shrink-0 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-md bg-accent/10 border border-accent/20 flex items-center justify-center">
-                <span className="text-accent font-bold text-xs">SAZ</span>
+              <div className="w-7 h-7 rounded-md bg-blue-50 border border-blue-200 flex items-center justify-center">
+                <span className="text-blue-600 font-bold text-xs">SAZ</span>
               </div>
               <h1 className="text-base font-semibold">SAZ Viewer</h1>
             </div>
