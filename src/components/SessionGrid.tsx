@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
-// no icon imports needed here after UI simplification
+import { MagnifyingGlass, FunnelSimple } from '@phosphor-icons/react'
 import type { Session } from '@/lib/types'
 import {
   DropdownMenu,
@@ -190,19 +190,23 @@ export function SessionGrid({
   }
 
   return (
-  <div className="h-full flex flex-col bg-white border-r border-neutral-200" data-testid="session-grid">
+    <div className="h-full flex flex-col bg-white/80 backdrop-blur-sm border-r border-white/60" data-testid="session-grid">
       {/* Header with title + controls */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-neutral-200 bg-white">
-        <h2 className="text-[11px] font-semibold tracking-wide text-neutral-700 uppercase">
-          Sessions <span className="text-neutral-400">({sessionOrder.length})</span>
-        </h2>
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-neutral-200/80 bg-gradient-to-r from-white to-slate-50/60">
+        <div className="flex items-center gap-2">
+          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_0_6px_rgba(16,185,129,0.12)]" />
+          <h2 className="text-[11px] font-semibold tracking-[0.08em] text-neutral-700 uppercase">
+            Sessions <span className="text-neutral-400">({sessionOrder.length})</span>
+          </h2>
+        </div>
         <div className="ml-auto flex items-center gap-2 w-2/3">
           <div className="relative flex-1">
+            <MagnifyingGlass size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-neutral-400" />
             <Input
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-7 px-2 text-[11px] bg-white border-neutral-300 focus:ring-0 focus:border-neutral-400"
+              className="h-8 pl-8 pr-3 text-[11px] bg-white/80 border-neutral-200 focus:ring-0 focus:border-accent/60 rounded-full"
             />
           </div>
 
@@ -211,13 +215,13 @@ export function SessionGrid({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-7 px-2 text-[11px] font-medium bg-white border-neutral-300 hover:bg-neutral-100 hover:text-neutral-700"
+                className="h-8 px-3 text-[11px] font-medium bg-white/80 border-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 rounded-full"
               >
+                <FunnelSimple size={14} className="mr-1 text-neutral-500" />
                 Method: {methodFilters.size === 0 ? 'All' : methodFilters.size === 1 ? Array.from(methodFilters)[0] : methodFilters.size}
-                <span className="ml-1 text-[10px]">▾</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40 bg-white border-neutral-300">
+            <DropdownMenuContent align="end" className="w-44 bg-white border-neutral-200 shadow-lg">
               <DropdownMenuLabel className="text-[11px] font-semibold text-neutral-600">Filter by Method</DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-neutral-200" />
               {allMethods.map((method) => (

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { FileDropZone } from './FileDropZone'
 
 describe('FileDropZone', () => {
@@ -83,6 +83,19 @@ describe('FileDropZone', () => {
     
     // The test passes if no errors occur - the drag state is internal
     expect(dropZone).toBeInTheDocument()
+  })
+
+  it('should visually highlight on drag over', async () => {
+    render(<FileDropZone isLoading={false} error={null} onFileLoaded={mockOnFileLoaded} />)
+    
+    const dropZone = screen.getByTestId('file-drop-zone')
+    fireEvent.dragOver(dropZone, {
+      dataTransfer: { files: [] },
+    })
+
+    await waitFor(() => {
+      expect(dropZone.className).toContain('bg-accent/10')
+    })
   })
 
   it('should handle file drop', () => {

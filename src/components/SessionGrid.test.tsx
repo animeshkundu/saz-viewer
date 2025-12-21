@@ -1,9 +1,24 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, beforeEach, vi, beforeAll } from 'vitest'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { SessionGrid } from './SessionGrid'
 import type { Session } from '@/lib/types'
 
 describe('SessionGrid', () => {
+  beforeAll(() => {
+    if (!global.ResizeObserver) {
+      class ResizeObserverMock {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      }
+
+      global.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver
+      // @ts-expect-error jsdom global
+      window.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver
+    }
+  })
+
   let mockSessions: Map<string, Session>
   let mockSessionOrder: string[]
   const mockOnSessionSelected = vi.fn()
@@ -506,5 +521,30 @@ describe('SessionGrid', () => {
       }
     }
   })
-})
 
+  it('should show method count when multiple filters are selected', async () => {
+    render(
+      <SessionGrid
+        sessions={mockSessions}
+        sessionOrder={mockSessionOrder}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    const user = userEvent.setup()
+    const filterButton = screen.getByRole('button', { name: /Method:/i })
+    await user.click(filterButton)
+
+    const getCheckbox = await screen.findByRole('menuitemcheckbox', { name: 'GET' })
+    await user.click(getCheckbox)
+
+    await user.click(filterButton)
+    const postCheckbox = await screen.findByRole('menuitemcheckbox', { name: 'POST' })
+    await user.click(postCheckbox)
+
+    await waitFor(() => {
+      expect(screen.getByText('Method: 2')).toBeInTheDocument()
+    })
+  })
+})
