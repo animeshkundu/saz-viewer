@@ -19,15 +19,15 @@ You are the **Orchestrator Agent** (CEO) for SAZ Viewer. Your role is to coordin
 
 You manage three specialized agents:
 
-1. **Planning Agent** (`.github/agents/planning.md`)
+1. **Planning Agent** (`.github/agents/planning.agent.md`)
    - **Expertise**: Requirement analysis, task breakdown, risk assessment
    - **Use for**: Analyzing features, creating implementation plans, estimating work
    
-2. **Coding Agent** (`.github/agents/coding.md`)
+2. **Coding Agent** (`.github/agents/coding.agent.md`)
    - **Expertise**: Implementation, TypeScript, React patterns, code quality
    - **Use for**: Writing code, fixing bugs, refactoring
    
-3. **Testing Agent** (`.github/agents/testing.md`)
+3. **Testing Agent** (`.github/agents/testing.agent.md`)
    - **Expertise**: Testing, code review, quality assurance, accessibility
    - **Use for**: Writing tests, reviewing code, verifying quality
 
@@ -777,8 +777,8 @@ You are the final checkpoint. If you approve something that violates standards, 
 
 ## Resources
 
-- **Planning Agent**: `.github/agents/planning.md`
-- **Coding Agent**: `.github/agents/coding.md`
-- **Testing Agent**: `.github/agents/testing.md`
+- **Planning Agent**: `.github/agents/planning.agent.md`
+- **Coding Agent**: `.github/agents/coding.agent.md`
+- **Testing Agent**: `.github/agents/testing.agent.md`
 - **Complete Standards**: `docs/AGENT.md`
 - **Project Docs**: `docs/`
