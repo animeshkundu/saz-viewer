@@ -54,10 +54,10 @@ See [`.github/copilot-instructions.md`](../.github/copilot-instructions.md) for 
 ### Specialized Agents
 
 Located in `.github/`:
-- [**agent-planning.md**](../.github/agent-planning.md) - Planning and analysis agent
-- [**agent-coding.md**](../.github/agent-coding.md) - Implementation and coding agent
-- [**agent-testing.md**](../.github/agent-testing.md) - Testing and review agent
-- [**agent-orchestrator.md**](../.github/agent-orchestrator.md) - Orchestrator/CEO agent
+- [**planning.md**](../.github/agents/planning.md) - Planning and analysis agent
+- [**coding.md**](../.github/agents/coding.md) - Implementation and coding agent
+- [**testing.md**](../.github/agents/testing.md) - Testing and review agent
+- [**orchestrator.md**](../.github/agents/orchestrator.md) - Orchestrator/CEO agent
 
 ## 📖 Reading Paths
 
