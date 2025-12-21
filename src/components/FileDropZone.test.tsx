@@ -13,8 +13,8 @@ describe('FileDropZone', () => {
     render(<FileDropZone isLoading={false} error={null} onFileLoaded={mockOnFileLoaded} />)
     
     expect(screen.getByText('SAZ Viewer')).toBeInTheDocument()
-    expect(screen.getByText('Load SAZ File')).toBeInTheDocument()
-    expect(screen.getByText(/Drop a/)).toBeInTheDocument()
+    expect(screen.getByText('Choose File')).toBeInTheDocument()
+     expect(screen.getByText(/Drop your/i)).toBeInTheDocument()
   })
 
   it('should show loading state', () => {
@@ -33,7 +33,7 @@ describe('FileDropZone', () => {
   it('should handle file selection via button click', () => {
     render(<FileDropZone isLoading={false} error={null} onFileLoaded={mockOnFileLoaded} />)
     
-    const button = screen.getByText('Load SAZ File')
+    const button = screen.getByText('Choose File')
     fireEvent.click(button)
     
     const input = document.querySelector('input[type="file"]') as HTMLInputElement

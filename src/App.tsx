@@ -89,14 +89,25 @@ function App() {
 
   return (
     <>
-      <div className="h-screen w-screen bg-background flex flex-col">
-        <header className="border-b bg-card px-6 py-2.5 shrink-0 shadow-sm">
+      <div className="h-screen w-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col">
+        <header className="border-b border-border/30 bg-card/80 backdrop-blur-xl px-8 py-4 shrink-0 elevation-1">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-md bg-accent/10 border border-accent/20 flex items-center justify-center">
-                <span className="text-accent font-bold text-xs">SAZ</span>
+            <div className="flex items-center gap-4">
+              {/* Prominent logo */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary blur-xl opacity-0 group-hover:opacity-30 transition-opacity"></div>
+                <div className="relative bg-gradient-to-br from-primary via-primary to-secondary p-2.5 rounded-xl elevation-2 group-hover:elevation-3 transition-all">
+                  <svg width="24" height="24" viewBox="0 0 48 48" fill="none" className="text-white">
+                    <path d="M24 4L8 12V22C8 32 14 40 24 44C34 40 40 32 40 22V12L24 4Z" fill="currentColor" opacity="0.3"/>
+                    <path d="M24 8L12 14V22C12 29.18 16.4 35.28 24 38C31.6 35.28 36 29.18 36 22V14L24 8Z" fill="currentColor"/>
+                    <path d="M20 22L22 24L28 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                  </svg>
+                </div>
               </div>
-              <h1 className="text-base font-semibold">SAZ Viewer</h1>
+              <div>
+                <h1 className="text-lg font-bold text-foreground">SAZ Viewer</h1>
+                <p className="text-xs text-muted-foreground">Inspect • Analyze • Debug</p>
+              </div>
             </div>
             <Button
               data-testid="load-new-file-button"
@@ -107,9 +118,9 @@ function App() {
                 setActiveSessionId(null)
                 setError(null)
               }}
-              className="gap-2 h-8"
+              className="gap-2.5 h-10 px-5 elevation-1 hover:elevation-2 transition-all hover:scale-[1.02] bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
             >
-              <FolderOpen size={16} />
+              <FolderOpen size={18} weight="bold" />
               Load New File
             </Button>
           </div>
@@ -126,7 +137,7 @@ function App() {
               />
             </ResizablePanel>
 
-            <ResizableHandle withHandle className="w-1 bg-border/50 hover:bg-accent/30 transition-colors" />
+            <ResizableHandle withHandle className="w-[1px] bg-border/40 hover:bg-primary/30 transition-colors" />
 
             <ResizablePanel defaultSize={75} minSize={30}>
               {activeSession ? (
@@ -139,7 +150,7 @@ function App() {
                     />
                   </ResizablePanel>
 
-                  <ResizableHandle withHandle className="h-1 bg-border/50 hover:bg-accent/30 transition-colors" />
+                  <ResizableHandle withHandle className="h-[1px] bg-border/40 hover:bg-primary/30 transition-colors" />
 
                   <ResizablePanel defaultSize={50} minSize={20}>
                     <InspectorPanel

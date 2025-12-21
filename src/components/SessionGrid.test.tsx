@@ -99,7 +99,7 @@ describe('SessionGrid', () => {
       />
     )
 
-      const activeRow = container.querySelector('.bg-blue-50, .border-l-blue-500')
+      const activeRow = container.querySelector('[data-active="true"]')
     expect(activeRow).toBeInTheDocument()
   })
 
@@ -113,7 +113,7 @@ describe('SessionGrid', () => {
       />
     )
 
-  const searchInput = screen.getByPlaceholderText('Search...')
+  const searchInput = screen.getByPlaceholderText('Search sessions...')
     fireEvent.change(searchInput, { target: { value: 'login' } })
 
     expect(screen.getByText('POST')).toBeInTheDocument()
@@ -130,7 +130,7 @@ describe('SessionGrid', () => {
       />
     )
 
-  const searchInput = screen.getByPlaceholderText('Search...')
+  const searchInput = screen.getByPlaceholderText('Search sessions...')
     fireEvent.change(searchInput, { target: { value: '3' } })
 
     const rows = screen.getAllByRole('row')
@@ -147,7 +147,7 @@ describe('SessionGrid', () => {
       />
     )
 
-  const searchInput = screen.getByPlaceholderText('Search...')
+  const searchInput = screen.getByPlaceholderText('Search sessions...')
     fireEvent.change(searchInput, { target: { value: 'nonexistent' } })
 
     expect(screen.getByText('No sessions found')).toBeInTheDocument()
@@ -259,14 +259,14 @@ describe('SessionGrid', () => {
     const statusCells = container.querySelectorAll('tbody td:nth-child(2)')
     
     const cell200 = Array.from(statusCells).find(cell => cell.textContent === '200')
-    expect(cell200?.className).toContain('text-emerald-600')
+    expect(cell200?.className).toContain('text-[#5FB878]')
     
     const cell404 = Array.from(statusCells).find(cell => cell.textContent === '404')
     // 404 is treated as an error range in the component implementation
-    expect(cell404?.className).toContain('text-red-600')
+    expect(cell404?.className).toContain('text-[#E67E82]')
     
     const cell500 = Array.from(statusCells).find(cell => cell.textContent === '500')
-    expect(cell500?.className).toContain('text-red-600')
+    expect(cell500?.className).toContain('text-[#E67E82]')
   })
 
   it('should display correct method colors', () => {
@@ -282,13 +282,13 @@ describe('SessionGrid', () => {
     const methodCells = container.querySelectorAll('tbody td:nth-child(3)')
     
     const getCell = Array.from(methodCells).find(cell => cell.textContent === 'GET')
-    expect(getCell?.className).toContain('text-blue-600')
+    expect(getCell?.className).toContain('text-[#6BA3D4]')
     
     const postCell = Array.from(methodCells).find(cell => cell.textContent === 'POST')
-    expect(postCell?.className).toContain('text-green-600')
+    expect(postCell?.className).toContain('text-[#7FD49D]')
     
     const deleteCell = Array.from(methodCells).find(cell => cell.textContent === 'DELETE')
-    expect(deleteCell?.className).toContain('text-red-600')
+    expect(deleteCell?.className).toContain('text-[#F4A5A8]')
   })
 
   it('should open method filter dropdown', () => {
@@ -302,7 +302,7 @@ describe('SessionGrid', () => {
     )
 
   // Look for filter functionality - the component may not have a filter button with that exact label
-  const searchInput = screen.getByPlaceholderText('Search...')
+  const searchInput = screen.getByPlaceholderText('Search sessions...')
     expect(searchInput).toBeInTheDocument()
   })
 
@@ -447,13 +447,13 @@ describe('SessionGrid', () => {
     const statusCells = Array.from(container.querySelectorAll('tbody td:nth-child(2)')) as HTMLElement[]
     
     const cell301 = statusCells.find(cell => cell.textContent === '301')
-    expect(cell301?.className).toContain('text-blue-600')
+    expect(cell301?.className).toContain('text-[#6BA3D4]')
     
     const cell204 = statusCells.find(cell => cell.textContent === '204')
-    expect(cell204?.className).toContain('text-emerald-600')
+    expect(cell204?.className).toContain('text-[#5FB878]')
     
     const cell503 = statusCells.find(cell => cell.textContent === '503')
-    expect(cell503?.className).toContain('text-red-600')
+    expect(cell503?.className).toContain('text-[#E67E82]')
   })
 
   it('should handle unknown HTTP method colors', () => {
@@ -472,7 +472,7 @@ describe('SessionGrid', () => {
 
     const methodCells = Array.from(container.querySelectorAll('tbody td:nth-child(3)')) as HTMLElement[]
     const optionsCell = methodCells.find(cell => cell.textContent === 'OPTIONS')
-    expect(optionsCell?.className).toContain('text-neutral-500')
+    expect(optionsCell?.className).toContain('text-muted-foreground')
   })
 
   it('should filter sessions when method filter is applied', () => {

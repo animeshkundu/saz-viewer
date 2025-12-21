@@ -8,26 +8,48 @@
 }
 
 :root {
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.20 0.015 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.015 250);
+  /* Modern Developer Tool Theme - Vibrant yet professional */
+  --background: oklch(0.99 0.002 250); /* Pure, bright background */
+  --foreground: oklch(0.25 0.02 250); /* Strong, readable text */
+  
+  --card: oklch(1 0 0); /* Pure white cards */
+  --card-foreground: oklch(0.25 0.02 250);
+  
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.015 250);
-  --primary: oklch(0.25 0.02 250);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.96 0.005 250);
-  --secondary-foreground: oklch(0.25 0.02 250);
-  --muted: oklch(0.97 0.005 250);
-  --muted-foreground: oklch(0.50 0.01 250);
-  --accent: oklch(0.58 0.20 265);
+  --popover-foreground: oklch(0.25 0.02 250);
+  
+  --primary: oklch(0.62 0.20 250); /* Vibrant blue #5B8DEF */
+  --primary-foreground: oklch(1 0 0); /* White text on primary */
+  
+  --secondary: oklch(0.75 0.15 290); /* Vibrant purple/lavender */
+  --secondary-foreground: oklch(1 0 0);
+  
+  --muted: oklch(0.96 0.003 250); /* Subtle gray */
+  --muted-foreground: oklch(0.48 0.015 250); /* Medium text */
+  
+  --accent: oklch(0.65 0.20 165); /* Fresh teal/mint */
   --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
+  
+  --success: oklch(0.65 0.20 160); /* Fresh green #10B981 */
+  --warning: oklch(0.75 0.18 85); /* Warm amber #F59E0B */
+  --error: oklch(0.65 0.22 25); /* Clear red #EF4444 */
+  
+  --destructive: oklch(0.65 0.22 25);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.92 0.005 250);
-  --input: oklch(0.92 0.005 250);
-  --ring: oklch(0.58 0.20 265);
-  --radius: 0.5rem;
+  
+  --border: oklch(0.94 0.005 250); /* Ultra-subtle borders */
+  --input: oklch(0.97 0.003 250);
+  --ring: oklch(0.62 0.20 250); /* Match primary */
+  
+  --radius: 0.625rem; /* 10px - refined rounded corners */
+  
+  /* Method colors - vibrant and distinct */
+  --method-get: oklch(0.62 0.20 250); /* Blue */
+  --method-post: oklch(0.65 0.20 160); /* Green */
+  --method-put: oklch(0.75 0.18 85); /* Amber */
+  --method-delete: oklch(0.65 0.22 25); /* Red */
+  --method-patch: oklch(0.75 0.15 290); /* Purple */
+  --method-connect: oklch(0.65 0.20 200); /* Cyan */
 }
 
 @theme {
@@ -50,6 +72,17 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  
+  /* Status and method colors */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-method-get: var(--method-get);
+  --color-method-post: var(--method-post);
+  --color-method-put: var(--method-put);
+  --color-method-delete: var(--method-delete);
+  --color-method-patch: var(--method-patch);
+  --color-method-connect: var(--method-connect);
 
   --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-family-mono: 'JetBrains Mono', 'Courier New', monospace;
@@ -71,4 +104,98 @@ body {
   font-feature-settings: "cv11", "ss01";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease;
+  letter-spacing: -0.011em; /* Refined letter spacing for Inter */
+}
+
+/* Ultra-smooth transitions for all interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Elegant, minimal scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.88 0.02 250);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.78 0.06 240);
+}
+
+/* Refined focus states with subtle rings */
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Smooth, elegant animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Elegant elevation system with subtle shadows */
+.elevation-1 {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03), 0 1px 3px 0 rgb(0 0 0 / 0.02);
+}
+
+.elevation-2 {
+  box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.04), 0 4px 6px -1px rgb(0 0 0 / 0.06);
+}
+
+.elevation-3 {
+  box-shadow: 0 4px 6px -2px rgb(0 0 0 / 0.05), 0 8px 12px -4px rgb(0 0 0 / 0.08);
+}
+
+/* Refined glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
 }
