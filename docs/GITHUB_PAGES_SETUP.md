@@ -15,9 +15,11 @@ production.
 
 1. In **Settings → Actions → General**, grant workflows read and write
    repository permissions.
-2. Trigger one successful deployment to create `gh-pages`.
-3. In **Settings → Pages**, choose **Deploy from a branch**.
-4. Select `gh-pages` and `/(root)`.
+2. In **Settings → Pages**, choose **GitHub Actions** as the source.
+
+The workflow uses `gh-pages` only as a staging tree so the primary site and
+branch previews can be packaged together. Selecting a branch source would
+create a competing automatic deployment.
 
 ## URLs
 

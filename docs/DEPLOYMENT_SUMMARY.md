@@ -6,8 +6,9 @@
 - `main` publishes to `https://<owner>.github.io/<repository>/`.
 - Non-main branches publish to
   `test-{sanitized-branch-name}-{branch-hash}/`.
-- All sites coexist on the `gh-pages` branch.
-- GitHub Pages must use `gh-pages` and `/(root)` as its branch source.
+- All sites coexist in a `gh-pages` staging tree that is deployed as one
+  official Pages artifact.
+- GitHub Pages must use **GitHub Actions** as its source.
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for setup, URL rules, local verification,
 and troubleshooting.

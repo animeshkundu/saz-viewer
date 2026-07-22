@@ -30,8 +30,7 @@ This project is configured to automatically deploy to GitHub Pages on every push
 
 1. **Enable GitHub Pages** in your repository:
    - Go to your repository **Settings** → **Pages**
-   - Under **Source**, select **Deploy from a branch**
-   - Select `gh-pages` and `/(root)`
+   - Under **Source**, select **GitHub Actions**
    - Save the settings
 
 2. **Push a branch**:

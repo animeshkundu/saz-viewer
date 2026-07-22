@@ -4,9 +4,8 @@
 
 - [ ] **Settings → Actions → General** grants workflows read and write
   permissions
-- [ ] A successful deployment has created the `gh-pages` branch
-- [ ] **Settings → Pages** uses **Deploy from a branch**
-- [ ] Pages publishes `gh-pages` from `/(root)`
+- [ ] **Settings → Pages** uses **GitHub Actions**
+- [ ] Pages is not configured to deploy directly from `main` or `gh-pages`
 
 ## Local Quality Gates
 

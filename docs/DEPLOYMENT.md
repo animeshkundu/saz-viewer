@@ -19,14 +19,14 @@ at `test-feature-import-ui-7babe353/`.
 ## One-Time Repository Setup
 
 1. Open **Settings → Pages**.
-2. Under **Build and deployment**, select **Deploy from a branch**.
-3. Select the `gh-pages` branch and `/(root)` folder.
-4. Open **Settings → Actions → General** and grant workflows read and write
+2. Under **Build and deployment**, select **GitHub Actions**.
+3. Open **Settings → Actions → General** and grant workflows read and write
    repository permissions.
 
-The `gh-pages` branch is created by the first successful deployment. If it is
-not available when configuring Pages, run the workflow once and then select
-it.
+The workflow maintains `gh-pages` as a staging tree containing the primary site
+and all branch previews, then deploys that complete tree through GitHub's Pages
+deployment API. Do not configure `main` or `gh-pages` as a branch source:
+GitHub's automatic Jekyll build would race the tested application artifact.
 
 ## Deployment Flow
 
@@ -37,7 +37,9 @@ it.
 4. `.github/workflows/deploy.yml` runs only when push CI succeeds and publishes
    the validated artifact without checking out or executing branch code. It
    rejects stale commits and independently enforces the publish destination.
-5. A `main` push updates the primary site. A non-main push updates that
+5. The workflow packages the assembled `gh-pages` staging tree and deploys it
+   through GitHub's Pages API.
+6. A `main` push updates the primary site. A non-main push updates that
    branch's preview directory without changing the primary site or other
    previews.
 
@@ -78,7 +80,7 @@ Confirm that workflow permissions are set to read and write under
 
 ### Site returns 404
 
-Confirm that Pages is configured to deploy from `gh-pages` and `/(root)`.
+Confirm that Pages is configured to use **GitHub Actions** as its source.
 Allow a few minutes for the first Pages build to finish.
 
 ### Assets return 404
@@ -86,3 +88,9 @@ Allow a few minutes for the first Pages build to finish.
 Confirm that the generated asset URLs include the repository and deployment
 path. The workflow sets `VITE_BASE_PATH` separately for primary and preview
 builds.
+
+### Site serves source files or appears blank
+
+Confirm that Pages is not configured to deploy from `main` or `gh-pages`.
+Branch-source mode runs an automatic Jekyll deployment that can replace the
+tested Vite build with the repository's source `index.html`.
