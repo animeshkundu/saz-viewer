@@ -120,6 +120,93 @@ describe('SessionGrid', () => {
     expect(screen.queryByText('DELETE')).not.toBeInTheDocument()
   })
 
+  it('should filter sessions by HTTP method as search text is entered', () => {
+    render(
+      <SessionGrid
+        sessions={mockSessions}
+        sessionOrder={mockSessionOrder}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    fireEvent.change(screen.getByPlaceholderText('Search...'), {
+      target: { value: 'post' },
+    })
+
+    expect(screen.getAllByRole('row')).toHaveLength(2)
+    expect(screen.getByText('POST')).toBeInTheDocument()
+    expect(screen.queryByText('DELETE')).not.toBeInTheDocument()
+  })
+
+  it('should filter sessions by status code as search text is entered', () => {
+    render(
+      <SessionGrid
+        sessions={mockSessions}
+        sessionOrder={mockSessionOrder}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    fireEvent.change(screen.getByPlaceholderText('Search...'), {
+      target: { value: '40' },
+    })
+
+    expect(screen.getAllByRole('row')).toHaveLength(2)
+    expect(screen.getByText('404')).toBeInTheDocument()
+    expect(screen.queryByText('500')).not.toBeInTheDocument()
+  })
+
+  it('should show a live count of matching sessions', () => {
+    render(
+      <SessionGrid
+        sessions={mockSessions}
+        sessionOrder={mockSessionOrder}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    expect(screen.getByTestId('filtered-count')).toHaveTextContent('4 matching')
+
+    fireEvent.change(screen.getByPlaceholderText('Search...'), {
+      target: { value: 'users' },
+    })
+
+    expect(screen.getByTestId('filtered-count')).toHaveTextContent('2 matching')
+  })
+
+  it('should clear search and method filters', () => {
+    render(
+      <SessionGrid
+        sessions={mockSessions}
+        sessionOrder={mockSessionOrder}
+        activeSessionId={null}
+        onSessionSelected={mockOnSessionSelected}
+      />
+    )
+
+    expect(screen.queryByRole('button', { name: 'Clear filters' })).not.toBeInTheDocument()
+
+    const methodFilter = screen.getByRole('button', { name: /Method:/ })
+    fireEvent.pointerDown(methodFilter, { button: 0, ctrlKey: false })
+    fireEvent.click(screen.getByRole('menuitemcheckbox', { name: 'GET' }))
+    fireEvent.change(screen.getByPlaceholderText('Search...'), {
+      target: { value: 'data' },
+    })
+
+    expect(methodFilter).toHaveTextContent('Method: GET')
+    expect(screen.getAllByRole('row')).toHaveLength(2)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }))
+
+    expect(screen.getByPlaceholderText('Search...')).toHaveValue('')
+    expect(methodFilter).toHaveTextContent('Method: All')
+    expect(screen.getAllByRole('row')).toHaveLength(5)
+    expect(screen.queryByRole('button', { name: 'Clear filters' })).not.toBeInTheDocument()
+  })
+
   it('should filter by session ID', () => {
     render(
       <SessionGrid
@@ -507,4 +594,3 @@ describe('SessionGrid', () => {
     }
   })
 })
-
