@@ -111,24 +111,11 @@ jobs:
             exit 1
           fi
 
-      - name: Prepare deployment artifact
-        env:
-          DESTINATION_DIR: ${{ steps.target.outputs.destination_dir }}
-        run: |
-          rm -rf pages-dist
-
-          if [ -z "$DESTINATION_DIR" ]; then
-            mv dist pages-dist
-          else
-            mkdir -p "pages-dist/$DESTINATION_DIR"
-            mv dist/. "pages-dist/$DESTINATION_DIR/"
-          fi
-
       - name: Upload deployment artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pages-dist
-          path: pages-dist/
+          path: dist/
           retention-days: 1
 
   unit-test:

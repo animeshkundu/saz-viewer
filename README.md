@@ -50,7 +50,8 @@ This project is configured to automatically deploy to GitHub Pages on every push
 
 - `.github/workflows/ci.yml` validates every source-branch push.
 - CI builds a deployment artifact with the correct base path. After all checks
-  succeed, `.github/workflows/deploy.yml` publishes that artifact.
+  succeed, `.github/workflows/deploy.yml` verifies the branch is current and
+  publishes that artifact to its enforced destination.
 - `main` updates the primary site. Other branches publish to a lowercase,
   sanitized `test-{branch-name}/` path.
 

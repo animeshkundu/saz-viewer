@@ -48,14 +48,17 @@ Use `.github/workflows/deploy.yml` as the sole publisher. It runs after a
 successful push execution of `CI/CD Pipeline` and publishes through a
 persistent `gh-pages` branch. CI excludes that generated publishing branch.
 CI builds and packages the deployment artifact; the privileged publishing
-workflow neither checks out nor executes branch code.
+workflow neither checks out nor executes branch code. The publisher derives
+the allowed destination from trusted event metadata and rejects a run if its
+commit is no longer the tip of the source branch.
 
 - `main` is built with `/<repository>/` as its base path and published at the
   root.
 - A non-main branch is built with
   `/<repository>/test-{sanitized-branch-name}/` as its base path and published
   to that directory.
-- Deployment concurrency is serialized across branches.
+- Deployment concurrency is serialized across branches with the full queue
+  retained.
 - Pull-request workflow runs do not deploy; source-branch push runs do.
 
 ## Consequences
@@ -80,6 +83,8 @@ workflow neither checks out nor executes branch code.
 |---|---|
 | Concurrent updates conflict | A shared Pages concurrency group serializes deployments. |
 | Branch code gains write access in the privileged workflow | CI creates the artifact; the publishing workflow does not execute branch code. |
+| A branch artifact overwrites another deployment | The publisher independently confines each non-main artifact to its derived preview directory. |
+| An older run finishes after a newer commit | The publisher verifies the triggering SHA is still the branch tip. |
 | Action supply-chain changes | The action is pinned to a reviewed commit SHA. |
 | Incorrect asset paths | Each build receives its final deployment path through `VITE_BASE_PATH`. |
 

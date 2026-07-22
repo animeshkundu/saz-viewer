@@ -10,6 +10,7 @@ on:
 concurrency:
   group: "pages"
   cancel-in-progress: false
+  queue: max
 
 jobs:
   deploy:
@@ -21,6 +22,51 @@ jobs:
       actions: read
       contents: write
     steps:
+      - name: Validate deployment target
+        id: target
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          BRANCH_NAME: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        with:
+          script: |
+            const branchName = process.env.BRANCH_NAME;
+            const headSha = process.env.HEAD_SHA;
+            const branch = await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: branchName,
+            });
+
+            if (branch.data.commit.sha !== headSha) {
+              core.setFailed(
+                `Skipping stale deployment ${headSha}; ${branchName} is now ` +
+                `${branch.data.commit.sha}.`
+              );
+              return;
+            }
+
+            if (branchName === 'main') {
+              core.setOutput('destination_dir', '');
+              core.setOutput('is_primary', 'true');
+              return;
+            }
+
+            const branchSlug = branchName
+              .toLowerCase()
+              .replace(/[^a-z0-9._-]+/g, '-')
+              .replace(/^-+|-+$/g, '');
+
+            if (!branchSlug) {
+              core.setFailed(
+                'Branch name does not contain any URL-safe characters.'
+              );
+              return;
+            }
+
+            core.setOutput('destination_dir', `test-${branchSlug}`);
+            core.setOutput('is_primary', 'false');
+
       - name: Download deployment artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -29,9 +75,18 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
 
-      - name: Publish site
+      - name: Publish primary site
+        if: steps.target.outputs.is_primary == 'true'
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./pages-dist
           keep_files: true
+
+      - name: Publish branch preview
+        if: steps.target.outputs.is_primary == 'false'
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./pages-dist
+          destination_dir: ${{ steps.target.outputs.destination_dir }}

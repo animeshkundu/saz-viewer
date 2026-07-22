@@ -31,12 +31,16 @@ it.
 1. A push to any source branch starts `.github/workflows/ci.yml`. The generated
    `gh-pages` publishing branch is excluded.
 2. CI runs lint, type checking, build, unit coverage, and E2E tests.
-3. CI packages the build at its final Pages path.
+3. CI packages the build with its final Pages base path.
 4. `.github/workflows/deploy.yml` runs only when push CI succeeds and publishes
-   the validated artifact without checking out or executing branch code.
+   the validated artifact without checking out or executing branch code. It
+   rejects stale commits and independently enforces the publish destination.
 5. A `main` push updates the primary site. A non-main push updates that
    branch's preview directory without changing the primary site or other
    previews.
+
+Pages updates share a serialized deployment queue so concurrent successful CI
+runs are preserved rather than racing or replacing one another.
 
 Pull-request CI does not deploy. The push event for the pull request's source
 branch creates or updates its preview.
