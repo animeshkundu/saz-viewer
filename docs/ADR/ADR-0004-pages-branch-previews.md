@@ -50,7 +50,9 @@ persistent `gh-pages` branch. CI excludes that generated publishing branch.
 CI builds and packages the deployment artifact; the privileged publishing
 workflow neither checks out nor executes branch code. The publisher derives
 the allowed destination from trusted event metadata and rejects a run if its
-commit is no longer the tip of the source branch.
+commit is no longer the tip of the source branch. After updating the staging
+branch, the workflow packages the complete tree and publishes it through the
+official GitHub Pages deployment API.
 
 - `main` is built with `/<repository>/` as its base path and published at the
   root.
@@ -72,9 +74,10 @@ commit is no longer the tip of the source branch.
 
 ### Negative Consequences
 
-- Pages must be configured to publish `gh-pages` from `/(root)`.
+- Pages must be configured to use GitHub Actions rather than a branch source.
 - Preview directories remain until replaced or manually removed.
-- Publishing uses the pinned `peaceiris/actions-gh-pages` action.
+- Staging uses the pinned `peaceiris/actions-gh-pages` action and final
+  publication uses pinned official Pages actions.
 
 ### Risks and Mitigation
 
@@ -87,6 +90,7 @@ commit is no longer the tip of the source branch.
 | An older run finishes after a newer commit | The publisher verifies the triggering SHA is still the branch tip. |
 | Action supply-chain changes | The action is pinned to a reviewed commit SHA. |
 | Incorrect asset paths | Each build receives its final deployment path through `VITE_BASE_PATH`. |
+| A branch-source Jekyll deployment replaces the Vite build | Pages uses GitHub Actions; the workflow explicitly deploys the assembled artifact. |
 
 ## References
 

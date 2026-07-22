@@ -21,6 +21,11 @@ jobs:
     permissions:
       actions: read
       contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Validate deployment target
         id: target
@@ -48,6 +53,7 @@ jobs:
 
             if (branchName === 'main') {
               core.setOutput('destination_dir', '');
+              core.setOutput('base_path', `/${context.repo.repo}/`);
               core.setOutput('is_primary', 'true');
               return;
             }
@@ -69,6 +75,10 @@ jobs:
               'destination_dir',
               `test-${safeBranchSlug}-${branchHash}`
             );
+            core.setOutput(
+              'base_path',
+              `/${context.repo.repo}/test-${safeBranchSlug}-${branchHash}/`
+            );
             core.setOutput('is_primary', 'false');
 
       - name: Download deployment artifact
@@ -78,6 +88,19 @@ jobs:
           path: pages-dist/
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Validate deployment artifact
+        env:
+          BASE_PATH: ${{ steps.target.outputs.base_path }}
+        run: |
+          test -f pages-dist/index.html
+          test -d pages-dist/assets
+          if grep -Eq '(src|href)="/src/' pages-dist/index.html; then
+            echo "Deployment artifact references unbuilt source files"
+            exit 1
+          fi
+          grep -Fq "src=\"${BASE_PATH}assets/" pages-dist/index.html
+          grep -Fq "href=\"${BASE_PATH}assets/" pages-dist/index.html
 
       - name: Publish primary site
         if: steps.target.outputs.is_primary == 'true'
@@ -94,3 +117,19 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./pages-dist
           destination_dir: ${{ steps.target.outputs.destination_dir }}
+
+      - name: Check out assembled Pages site
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: gh-pages
+          path: published-site
+          persist-credentials: false
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: published-site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
