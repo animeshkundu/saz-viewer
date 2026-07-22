@@ -1,0 +1,94 @@
+# ADR-0004: GitHub Pages Branch Previews
+
+## Status
+
+**Accepted**
+
+**Date**: 2026-07-22
+
+**Author(s)**: SAZ Viewer Team
+
+## Context
+
+The repository had two workflows that could independently deploy the primary
+GitHub Pages site. This duplicated builds and allowed deployments to race.
+The project also needs each development branch to have a stable preview while
+the primary URL continues to represent `main`.
+
+GitHub's artifact-based Pages deployment replaces the entire site per
+deployment. It therefore cannot preserve independent branch paths by itself.
+
+## Decision Drivers
+
+1. Deploy only commits that pass the complete CI pipeline.
+2. Keep `main` at the primary repository Pages URL.
+3. Keep multiple branch previews available at the same time.
+4. Prevent concurrent publishers from overwriting each other.
+
+## Considered Options
+
+### Separate artifact-based Pages deployments
+
+This retains the official Pages deployment action, but each branch deployment
+replaces the primary site and other previews.
+
+### Rebuild every branch into one artifact
+
+This preserves all paths, but each deployment would need to fetch, install,
+and build every active branch.
+
+### Persistent `gh-pages` branch
+
+This lets one serialized workflow update the primary files or one preview
+directory while preserving the other deployments.
+
+## Decision
+
+Use `.github/workflows/deploy.yml` as the sole publisher. It runs after a
+successful push execution of `CI/CD Pipeline` and publishes through a
+persistent `gh-pages` branch. CI excludes that generated publishing branch.
+CI builds and packages the deployment artifact; the privileged publishing
+workflow neither checks out nor executes branch code. The publisher derives
+the allowed destination from trusted event metadata and rejects a run if its
+commit is no longer the tip of the source branch.
+
+- `main` is built with `/<repository>/` as its base path and published at the
+  root.
+- A non-main branch is built with
+  `/<repository>/test-{sanitized-branch-name}-{branch-hash}/` as its base path
+  and published to that directory.
+- Deployment concurrency is serialized across branches with the full queue
+  retained.
+- Pull-request workflow runs do not deploy; source-branch push runs do.
+
+## Consequences
+
+### Positive Consequences
+
+- The primary site and branch previews coexist.
+- Deployment cannot bypass CI.
+- Deployment logic has one owner.
+- Preview URLs are deterministic.
+
+### Negative Consequences
+
+- Pages must be configured to publish `gh-pages` from `/(root)`.
+- Preview directories remain until replaced or manually removed.
+- Publishing uses the pinned `peaceiris/actions-gh-pages` action.
+
+### Risks and Mitigation
+
+| Risk | Mitigation |
+|---|---|
+| Concurrent updates conflict | A shared Pages concurrency group serializes deployments. |
+| Branch code gains write access in the privileged workflow | CI creates the artifact; the publishing workflow does not execute branch code. |
+| A branch artifact overwrites another deployment | The publisher independently confines each non-main artifact to its derived preview directory. |
+| Sanitized branch names collide | A stable hash of the original branch name is included in every preview directory. |
+| An older run finishes after a newer commit | The publisher verifies the triggering SHA is still the branch tip. |
+| Action supply-chain changes | The action is pinned to a reviewed commit SHA. |
+| Incorrect asset paths | Each build receives its final deployment path through `VITE_BASE_PATH`. |
+
+## References
+
+- [GitHub Pages deployment guide](../DEPLOYMENT.md)
+- [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)

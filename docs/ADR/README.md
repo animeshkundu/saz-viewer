@@ -57,6 +57,7 @@ ADRs go through the following statuses:
 | [0001](./ADR-0001-client-side-architecture.md) | Client-Side Only Architecture | Accepted | 2024-12-20 |
 | [0002](./ADR-0002-react-typescript-stack.md) | React + TypeScript Tech Stack | Accepted | 2024-12-20 |
 | [0003](./ADR-0003-jszip-for-parsing.md) | JSZip for SAZ File Parsing | Accepted | 2024-12-20 |
+| [0004](./ADR-0004-pages-branch-previews.md) | GitHub Pages Branch Previews | Accepted | 2026-07-22 |
 
 ## Contributing
 
