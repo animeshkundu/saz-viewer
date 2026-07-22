@@ -1,89 +1,79 @@
 # GitHub Pages Deployment Guide
 
-## Quick Start
+SAZ Viewer uses one deployment workflow for both the primary site and branch
+previews. Deployment starts only after the CI workflow succeeds for a push.
 
-Your SAZ Viewer is ready to deploy to GitHub Pages! Follow these steps:
+## Deployment Targets
 
-### 1. Enable GitHub Pages
+| Source branch | Published path |
+|---|---|
+| `main` | `https://<owner>.github.io/<repository>/` |
+| Any non-main branch | `https://<owner>.github.io/<repository>/test-{branch-name}/` |
 
-1. Go to your GitHub repository
-2. Click **Settings** (top menu)
-3. Click **Pages** (left sidebar)
-4. Under **Source**, select **GitHub Actions**
-5. Click **Save**
+Preview names are lowercase and characters outside `a-z`, `0-9`, `.`, `_`,
+and `-` become `-`. For example, `feature/import-ui` is published at
+`test-feature-import-ui/`.
 
-### 2. Push to Deploy
+## One-Time Repository Setup
 
-Every push to the `main` branch automatically triggers deployment:
+1. Open **Settings → Pages**.
+2. Under **Build and deployment**, select **Deploy from a branch**.
+3. Select the `gh-pages` branch and `/(root)` folder.
+4. Open **Settings → Actions → General** and grant workflows read and write
+   repository permissions.
+
+The `gh-pages` branch is created by the first successful deployment. If it is
+not available when configuring Pages, run the workflow once and then select
+it.
+
+## Deployment Flow
+
+1. A push to any branch starts `.github/workflows/ci.yml`.
+2. CI runs lint, type checking, build, unit coverage, and E2E tests.
+3. `.github/workflows/deploy.yml` runs only when push CI succeeds.
+4. A `main` push updates the primary site. A non-main push replaces that
+   branch's preview directory without changing the primary site or other
+   previews.
+
+Pull-request CI does not deploy. The push event for the pull request's source
+branch creates or updates its preview.
+
+## Local Verification
 
 ```bash
-git add .
-git commit -m "Your commit message"
-git push origin main
+npm ci
+npm run lint
+npm run typecheck
+npm run test:coverage
+npm run e2e
+VITE_BASE_PATH=/saz-viewer/ npm run build
 ```
 
-### 3. Access Your Site
+To verify a branch preview build, include its target directory:
 
-After the GitHub Action completes (2-3 minutes), your site will be live at:
-
+```bash
+VITE_BASE_PATH=/saz-viewer/test-feature-import-ui/ npm run build
 ```
-https://<your-username>.github.io/<repository-name>/
-```
-
-For example:
-- Repository: `octocat/saz-viewer`
-- Live URL: `https://octocat.github.io/saz-viewer/`
-
-## Monitoring Deployment
-
-1. Go to the **Actions** tab in your repository
-2. Click on the latest "Deploy to GitHub Pages" workflow run
-3. Watch the build and deploy steps
-4. Once complete (green checkmark ✅), your site is live!
 
 ## Troubleshooting
 
-### Build Fails
+### Deployment workflow is skipped
 
-- Check the Actions tab for error messages
-- Ensure all dependencies are in `package.json`
-- Verify `npm run build` works locally
+Confirm that the corresponding CI run was caused by a push and completed
+successfully. Pull-request workflow runs are intentionally ignored.
 
-### 404 on Deployed Site
+### Permission denied while publishing
 
-- Ensure GitHub Pages is set to **GitHub Actions** (not a branch)
-- Wait 2-3 minutes after first deployment
-- Check the Actions tab to confirm deployment succeeded
+Confirm that workflow permissions are set to read and write under
+**Settings → Actions → General**.
 
-### Assets Not Loading
+### Site returns 404
 
-- The workflow automatically sets the correct base path
-- If you see 404s for CSS/JS, check the build output in Actions logs
+Confirm that Pages is configured to deploy from `gh-pages` and `/(root)`.
+Allow a few minutes for the first Pages build to finish.
 
-## Technical Details
+### Assets return 404
 
-### What Happens on Push
-
-1. **Build Job**:
-   - Checks out your code
-   - Sets up Node.js 24
-   - Installs dependencies (`npm ci`)
-   - Builds the app with correct base path
-   - Uploads the `dist` folder as an artifact
-
-2. **Deploy Job**:
-   - Downloads the build artifact
-   - Deploys to GitHub Pages
-   - Makes the site live
-
-### Configuration Files
-
-- **`.github/workflows/deploy.yml`** - The GitHub Actions workflow
-- **`vite.config.ts`** - Vite configuration with dynamic base path
-- Both files are already configured; no changes needed!
-
-## Need Help?
-
-- View workflow runs: **Actions** tab
-- Check build logs: Click on a workflow run → **build** job
-- GitHub Pages docs: https://docs.github.com/pages
+Confirm that the generated asset URLs include the repository and deployment
+path. The workflow sets `VITE_BASE_PATH` separately for primary and preview
+builds.

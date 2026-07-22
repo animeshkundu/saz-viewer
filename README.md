@@ -30,10 +30,11 @@ This project is configured to automatically deploy to GitHub Pages on every push
 
 1. **Enable GitHub Pages** in your repository:
    - Go to your repository **Settings** → **Pages**
-   - Under **Source**, select **GitHub Actions**
+   - Under **Source**, select **Deploy from a branch**
+   - Select `gh-pages` and `/(root)`
    - Save the settings
 
-2. **Push to main branch**:
+2. **Push a branch**:
    ```bash
    git add .
    git commit -m "Deploy to GitHub Pages"
@@ -42,17 +43,16 @@ This project is configured to automatically deploy to GitHub Pages on every push
 
 3. **Monitor the deployment**:
    - Go to the **Actions** tab in your repository
-   - Watch the "Deploy to GitHub Pages" workflow run
+   - Watch the "CI/CD Pipeline" and "Deploy GitHub Pages" workflow runs
    - Once complete, your site will be available at: `https://<username>.github.io/<repository-name>/`
 
 ### How It Works
 
-- The `.github/workflows/deploy.yml` workflow automatically builds and deploys your app
-- On push to `main`, it:
-  1. Installs dependencies with `npm ci`
-  2. Builds the production app with `npm run build`
-  3. Configures the correct base path for GitHub Pages
-  4. Deploys the `dist` folder to GitHub Pages
+- `.github/workflows/ci.yml` validates every branch push.
+- After CI succeeds, `.github/workflows/deploy.yml` builds and publishes the
+  app with the correct base path.
+- `main` updates the primary site. Other branches publish to a lowercase,
+  sanitized `test-{branch-name}/` path.
 
 ### Local Development
 
@@ -144,9 +144,11 @@ The project uses GitHub Actions for continuous integration and deployment:
 3. **Build** - Application build
 4. **Unit Tests** - Run with coverage requirements
 5. **E2E Tests** - Playwright browser tests
-6. **Deploy** - Auto-deploy to GitHub Pages (main branch only)
+6. **Deploy** - Publish `main` at the primary GitHub Pages URL and each
+   non-main branch at `test-{branch-name}/`
 
-All checks must pass before deployment. See `.github/workflows/ci.yml` for details.
+Deployments run only after all CI checks pass. See `.github/workflows/ci.yml`
+and `.github/workflows/deploy.yml` for details.
 
 ## License
 

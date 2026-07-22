@@ -357,7 +357,7 @@ See [SECURITY.md](./SECURITY.md) for detailed security considerations.
 ┌─────────────────────────────────────────────┐
 │             GitHub Repository               │
 │  ┌─────────────────────────────────────┐   │
-│  │  main branch push                   │   │
+│  │  branch push                        │   │
 │  └──────────────┬──────────────────────┘   │
 │                 │                           │
 │                 ▼                           │
@@ -373,7 +373,7 @@ See [SECURITY.md](./SECURITY.md) for detailed security considerations.
 │  ┌─────────────────────────────────────┐   │
 │  │  Deploy to GitHub Pages             │   │
 │  │  - Upload dist/ folder              │   │
-│  │  - Update GitHub Pages deployment   │   │
+│  │  - Publish primary or test path     │   │
 │  └──────────────┬──────────────────────┘   │
 └─────────────────┼───────────────────────────┘
                   │
@@ -420,8 +420,10 @@ npm run build        # TypeScript compilation + Vite build
 ### CI/CD Pipeline
 
 See `.github/workflows/`:
-- `ci.yml`: Runs tests, linting, coverage on every push/PR
-- `deploy.yml`: Deploys to GitHub Pages on main branch push
+- `ci.yml`: Runs linting, type checking, builds, coverage, and E2E tests on
+  every branch push and on pull requests targeting `main`
+- `deploy.yml`: Runs after successful push CI, publishing `main` at the
+  primary Pages URL and non-main branches under `test-{branch-name}/`
 
 ## Scalability Considerations
 
