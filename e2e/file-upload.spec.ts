@@ -19,7 +19,7 @@ test.describe('File Upload Flow', () => {
     
     // Check for upload button
     await expect(page.locator('[data-testid="upload-button"]')).toBeVisible()
-    await expect(page.locator('button:has-text("Load SAZ File")')).toBeVisible()
+    await expect(page.locator('button:has-text("Select File")')).toBeVisible()
   })
 
   test('should load a valid SAZ file via file input', async ({ page }) => {
