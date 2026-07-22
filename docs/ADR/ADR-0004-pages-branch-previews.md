@@ -46,7 +46,7 @@ directory while preserving the other deployments.
 
 Use `.github/workflows/deploy.yml` as the sole publisher. It runs after a
 successful push execution of `CI/CD Pipeline` and publishes through a
-persistent `gh-pages` branch.
+persistent `gh-pages` branch. CI excludes that generated publishing branch.
 
 - `main` is built with `/<repository>/` as its base path and published at the
   root.

@@ -48,7 +48,7 @@ This project is configured to automatically deploy to GitHub Pages on every push
 
 ### How It Works
 
-- `.github/workflows/ci.yml` validates every branch push.
+- `.github/workflows/ci.yml` validates every source-branch push.
 - After CI succeeds, `.github/workflows/deploy.yml` builds and publishes the
   app with the correct base path.
 - `main` updates the primary site. Other branches publish to a lowercase,

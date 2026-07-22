@@ -2,7 +2,7 @@
 
 ## Workflows
 
-- `.github/workflows/ci.yml` validates every branch push and pull requests
+- `.github/workflows/ci.yml` validates every source-branch push and pull requests
   targeting `main`.
 - `.github/workflows/deploy.yml` is the only Pages publisher. It runs after a
   successful push CI run.

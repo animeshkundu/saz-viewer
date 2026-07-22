@@ -1,6 +1,6 @@
 # GitHub Pages Deployment Summary
 
-- CI runs on every branch push and on pull requests targeting `main`.
+- CI runs on every source-branch push and on pull requests targeting `main`.
 - `.github/workflows/deploy.yml` is the sole deployment workflow.
 - Deployment occurs only after successful push CI.
 - `main` publishes to `https://<owner>.github.io/<repository>/`.

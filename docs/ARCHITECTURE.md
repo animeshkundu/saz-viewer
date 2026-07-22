@@ -421,7 +421,7 @@ npm run build        # TypeScript compilation + Vite build
 
 See `.github/workflows/`:
 - `ci.yml`: Runs linting, type checking, builds, coverage, and E2E tests on
-  every branch push and on pull requests targeting `main`
+  every source-branch push and on pull requests targeting `main`
 - `deploy.yml`: Runs after successful push CI, publishing `main` at the
   primary Pages URL and non-main branches under `test-{branch-name}/`
 

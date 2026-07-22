@@ -8,7 +8,7 @@ previews. Deployment starts only after the CI workflow succeeds for a push.
 | Source branch | Published path |
 |---|---|
 | `main` | `https://<owner>.github.io/<repository>/` |
-| Any non-main branch | `https://<owner>.github.io/<repository>/test-{branch-name}/` |
+| Any non-main source branch | `https://<owner>.github.io/<repository>/test-{branch-name}/` |
 
 Preview names are lowercase and characters outside `a-z`, `0-9`, `.`, `_`,
 and `-` become `-`. For example, `feature/import-ui` is published at
@@ -28,7 +28,8 @@ it.
 
 ## Deployment Flow
 
-1. A push to any branch starts `.github/workflows/ci.yml`.
+1. A push to any source branch starts `.github/workflows/ci.yml`. The generated
+   `gh-pages` publishing branch is excluded.
 2. CI runs lint, type checking, build, unit coverage, and E2E tests.
 3. `.github/workflows/deploy.yml` runs only when push CI succeeds.
 4. A `main` push updates the primary site. A non-main push replaces that
