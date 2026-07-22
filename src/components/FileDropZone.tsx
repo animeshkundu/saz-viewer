@@ -126,7 +126,7 @@ export function FileDropZone({ isLoading, error, onFileLoaded }: FileDropZonePro
                 {isDragOver ? 'Release to inspect' : 'Drop a .saz archive'}
               </h2>
               <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-[#83948b]">
-                Drop a Fiddler archive here, or choose one from your device. Large captures are welcome.
+                Place a Fiddler archive here, or choose one from your device. Large captures are welcome.
               </p>
 
               <Button

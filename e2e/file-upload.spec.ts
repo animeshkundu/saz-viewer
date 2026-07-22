@@ -15,11 +15,11 @@ test.describe('File Upload Flow', () => {
     await expect(page.locator('[data-testid="file-drop-zone"]')).toBeVisible()
     
     // Check for the SAZ Viewer heading
-    await expect(page.locator('h2:has-text("SAZ Viewer")')).toBeVisible()
+    await expect(page.locator('text=See the conversation behind every request.')).toBeVisible()
     
     // Check for upload button
     await expect(page.locator('[data-testid="upload-button"]')).toBeVisible()
-    await expect(page.locator('button:has-text("Load SAZ File")')).toBeVisible()
+    await expect(page.locator('button:has-text("Choose SAZ file")')).toBeVisible()
   })
 
   test('should load a valid SAZ file via file input', async ({ page }) => {

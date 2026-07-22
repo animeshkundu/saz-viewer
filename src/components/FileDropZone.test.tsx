@@ -13,7 +13,7 @@ describe('FileDropZone', () => {
     render(<FileDropZone isLoading={false} error={null} onFileLoaded={mockOnFileLoaded} />)
     
     expect(screen.getByText('SAZ Viewer')).toBeInTheDocument()
-    expect(screen.getByText('Load SAZ File')).toBeInTheDocument()
+    expect(screen.getByText('Choose SAZ file')).toBeInTheDocument()
     expect(screen.getByText(/Drop a/)).toBeInTheDocument()
   })
 
@@ -33,7 +33,7 @@ describe('FileDropZone', () => {
   it('should handle file selection via button click', () => {
     render(<FileDropZone isLoading={false} error={null} onFileLoaded={mockOnFileLoaded} />)
     
-    const button = screen.getByText('Load SAZ File')
+    const button = screen.getByText('Choose SAZ file')
     fireEvent.click(button)
     
     const input = document.querySelector('input[type="file"]') as HTMLInputElement
@@ -88,7 +88,7 @@ describe('FileDropZone', () => {
   it('should handle file drop', () => {
     render(<FileDropZone isLoading={false} error={null} onFileLoaded={mockOnFileLoaded} />)
     
-    const dropZone = screen.getByText('SAZ Viewer').closest('div')!.parentElement!
+    const dropZone = screen.getByTestId('file-drop-zone')
     const file = new File(['content'], 'test.saz', { type: 'application/zip' })
     
     fireEvent.drop(dropZone, {
@@ -133,7 +133,7 @@ describe('FileDropZone', () => {
   it('should handle empty file drop', () => {
     render(<FileDropZone isLoading={false} error={null} onFileLoaded={mockOnFileLoaded} />)
     
-    const dropZone = screen.getByText('SAZ Viewer').closest('div')!.parentElement!
+    const dropZone = screen.getByTestId('file-drop-zone')
     
     fireEvent.drop(dropZone, {
       dataTransfer: {
