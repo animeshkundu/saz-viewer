@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
-// no icon imports needed here after UI simplification
+import { FunnelSimple, MagnifyingGlass, X } from '@phosphor-icons/react'
 import type { Session } from '@/lib/types'
 import {
   DropdownMenu,
@@ -200,28 +200,30 @@ export function SessionGrid({
   }
 
   return (
-  <div className="h-full flex flex-col bg-white border-r border-neutral-200" data-testid="session-grid">
-      <div className="border-b border-neutral-200 bg-white">
-        <div className="flex items-center gap-2 px-3 pt-2 pb-1">
-          <h2 className="text-[11px] font-semibold tracking-wide text-neutral-700 uppercase">
-            Sessions <span className="text-neutral-400">({sessionOrder.length})</span>
+  <div className="h-full flex flex-col bg-[#0b1512] border-r border-white/10 text-[#dce6e0]" data-testid="session-grid">
+      <div className="border-b border-white/10 bg-[#0d1814]">
+        <div className="flex items-center gap-2 px-3.5 pt-3 pb-2">
+          <h2 className="text-[10px] font-semibold tracking-[0.16em] text-[#aab8b0] uppercase">
+            Sessions <span className="text-[#68776f]">({sessionOrder.length})</span>
           </h2>
           <span
             role="status"
             aria-live="polite"
             data-testid="filtered-count"
-            className="ml-auto text-[11px] text-neutral-500"
+            className="ml-auto font-mono text-[10px] text-[#6f8077]"
           >
             {filteredAndSortedSessions.length} matching
           </span>
         </div>
-        <div className="flex items-center gap-2 px-3 pb-2">
+        <div className="flex items-center gap-2 px-3 pb-3">
           <div className="relative flex-1">
+            <MagnifyingGlass size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#6f8077]" />
             <Input
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-7 px-2 text-[11px] bg-white border-neutral-300 focus:ring-0 focus:border-neutral-400"
+              aria-label="Search sessions"
+              className="h-8 border-white/10 bg-white/[0.035] pl-8 pr-2 text-[11px] text-[#dce6e0] placeholder:text-[#617168] focus:border-[#b8f455]/50 focus:ring-0"
             />
           </div>
 
@@ -230,21 +232,21 @@ export function SessionGrid({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-7 px-2 text-[11px] font-medium bg-white border-neutral-300 hover:bg-neutral-100 hover:text-neutral-700"
+                className="h-8 gap-1.5 border-white/10 bg-white/[0.035] px-2.5 text-[10px] font-medium text-[#aab8b0] hover:bg-white/[0.07] hover:text-white"
               >
+                <FunnelSimple size={12} />
                 Method: {methodFilters.size === 0 ? 'All' : methodFilters.size === 1 ? Array.from(methodFilters)[0] : methodFilters.size}
-                <span className="ml-1 text-[10px]">▾</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40 bg-white border-neutral-300">
-              <DropdownMenuLabel className="text-[11px] font-semibold text-neutral-600">Filter by Method</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-neutral-200" />
+            <DropdownMenuContent align="end" className="w-40 border-white/10 bg-[#12201b] text-[#dce6e0]">
+              <DropdownMenuLabel className="text-[10px] font-semibold text-[#85968d]">Filter by Method</DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-white/10" />
               {allMethods.map((method) => (
                 <DropdownMenuCheckboxItem
                   key={method}
                   checked={methodFilters.has(method)}
                   onCheckedChange={() => toggleMethodFilter(method)}
-                  className="relative pl-6 pr-2 text-[11px] font-mono text-neutral-700 data-[state=checked]:bg-neutral-100"
+                  className="relative pl-6 pr-2 text-[11px] font-mono text-[#c5d0ca] focus:bg-white/[0.07] data-[state=checked]:bg-[#b8f455]/10"
                 >
                   {method}
                 </DropdownMenuCheckboxItem>
@@ -258,9 +260,10 @@ export function SessionGrid({
               size="sm"
               aria-label="Clear filters"
               onClick={clearFilters}
-              className="h-7 px-2 text-[11px] text-neutral-600 hover:bg-neutral-100 hover:text-neutral-800"
+              className="h-8 w-8 p-0 text-[#74857c] hover:bg-white/[0.07] hover:text-white"
             >
-              Clear filters
+              <X size={13} />
+              <span className="sr-only">Clear filters</span>
             </Button>
           )}
         </div>
@@ -269,49 +272,49 @@ export function SessionGrid({
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <table className="w-full border-collapse" style={{ tableLayout: 'fixed' }}>
-            <thead className="sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-neutral-200">
+            <thead className="sticky top-0 z-10 bg-[#0b1512]/95 backdrop-blur border-b border-white/10">
               <tr>
                 <th 
                   style={{ width: `${columnWidths.id}px` }}
-                  className="relative text-left px-2 py-1.5 text-[11px] font-medium text-neutral-500 cursor-pointer hover:text-neutral-700 select-none"
+                  className="relative text-left px-2.5 py-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#63736b] cursor-pointer hover:text-[#b8f455] select-none"
                   onClick={() => handleSort('id')}
                 >
                   #{renderSortIcon('id')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-neutral-300 active:bg-neutral-400"
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-[#b8f455]/30 active:bg-[#b8f455]/50"
                     onMouseDown={(e) => handleMouseDown('id', e)}
                   />
                 </th>
                 <th 
                   style={{ width: `${columnWidths.status}px` }}
-                  className="relative text-left px-2 py-1.5 text-[11px] font-medium text-neutral-500 cursor-pointer hover:text-neutral-700 select-none"
+                  className="relative text-left px-2.5 py-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#63736b] cursor-pointer hover:text-[#b8f455] select-none"
                   onClick={() => handleSort('status')}
                 >
                   Status{renderSortIcon('status')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-neutral-300 active:bg-neutral-400"
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-[#b8f455]/30 active:bg-[#b8f455]/50"
                     onMouseDown={(e) => handleMouseDown('status', e)}
                   />
                 </th>
                 <th 
                   style={{ width: `${columnWidths.method}px` }}
-                  className="relative text-left px-2 py-1.5 text-[11px] font-medium text-neutral-500 cursor-pointer hover:text-neutral-700 select-none"
+                  className="relative text-left px-2.5 py-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#63736b] cursor-pointer hover:text-[#b8f455] select-none"
                   onClick={() => handleSort('method')}
                 >
                   Method{renderSortIcon('method')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-neutral-300 active:bg-neutral-400"
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-[#b8f455]/30 active:bg-[#b8f455]/50"
                     onMouseDown={(e) => handleMouseDown('method', e)}
                   />
                 </th>
                 <th 
                   style={{ width: `${columnWidths.url}px` }}
-                  className="relative text-left px-2 py-1.5 text-[11px] font-medium text-neutral-500 cursor-pointer hover:text-neutral-700 select-none"
+                  className="relative text-left px-2.5 py-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#63736b] cursor-pointer hover:text-[#b8f455] select-none"
                   onClick={() => handleSort('url')}
                 >
                   URL{renderSortIcon('url')}
                   <div
-                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-neutral-300 active:bg-neutral-400"
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-[#b8f455]/30 active:bg-[#b8f455]/50"
                     onMouseDown={(e) => handleMouseDown('url', e)}
                   />
                 </th>
@@ -331,34 +334,34 @@ export function SessionGrid({
                     data-active={isActive}
                     ref={isActive ? activeRowRef : null}
                     onClick={() => onSessionSelected(id)}
-                    className={`group cursor-pointer border-b border-neutral-200 transition-colors relative
+                    className={`group cursor-pointer border-b border-white/[0.055] transition-colors relative
                       ${isActive 
-                        ? 'bg-blue-50 border-l-2 border-l-blue-500' 
-                        : 'hover:bg-blue-50/50'
+                        ? 'bg-blue-50 !bg-[#b8f455]/[0.09] border-l-2 border-l-blue-500 !border-l-[#b8f455]' 
+                        : 'hover:bg-white/[0.035]'
                       }
                     `}
                   >
                     <td 
                       style={{ width: `${columnWidths.id}px` }}
-                      className={`px-2 py-1.5 text-[11px] font-mono text-neutral-500 tabular-nums ${isActive ? 'pl-1.5' : ''}`}
+                      className={`px-2.5 py-2 text-[10px] font-mono text-[#65756d] tabular-nums ${isActive ? 'pl-2' : ''}`}
                     >
                       {id}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.status}px` }}
-                      className={`px-2 py-1.5 text-[11px] font-mono font-semibold tabular-nums ${getStatusCodeColor(session.response.statusCode)}`}
+                      className={`px-2.5 py-2 text-[10px] font-mono font-semibold tabular-nums ${getStatusCodeColor(session.response.statusCode)}`}
                     >
                       {session.response.statusCode}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.method}px` }}
-                      className={`px-2 py-1.5 text-[11px] font-semibold ${getMethodColor(session.method)}`}
+                      className={`px-2.5 py-2 text-[10px] font-semibold ${getMethodColor(session.method)}`}
                     >
                       {session.method}
                     </td>
                     <td 
                       style={{ width: `${columnWidths.url}px` }}
-                      className="px-2 py-1.5 text-[11px] font-mono text-neutral-700 truncate"
+                      className="px-2.5 py-2 text-[10px] font-mono text-[#aebbb4] truncate"
                       title={session.url}
                     >
                       {session.url}
@@ -371,8 +374,8 @@ export function SessionGrid({
                 <tr>
                   <td colSpan={4} className="py-12">
                     <div className="flex flex-col items-center justify-center text-center">
-                      <span className="text-muted-foreground mb-2 text-xl">🔍</span>
-                      <p className="text-sm text-muted-foreground">No sessions found</p>
+                      <MagnifyingGlass size={22} className="mb-3 text-[#56655d]" />
+                      <p className="text-sm text-[#819188]">No sessions found</p>
                     </div>
                   </td>
                 </tr>
