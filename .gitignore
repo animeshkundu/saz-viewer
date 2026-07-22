@@ -39,3 +39,4 @@ test-results/
 
 # E2E test fixtures (generated)
 e2e/fixtures/create-sample-saz.ts
+e2e/fixtures/generated/
