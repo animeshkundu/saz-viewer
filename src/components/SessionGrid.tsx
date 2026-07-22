@@ -117,13 +117,16 @@ export function SessionGrid({
   }
 
   const filteredAndSortedSessions = useMemo(() => {
+    const normalizedSearchTerm = searchTerm.toLowerCase()
     const filtered = sessionOrder.filter((id) => {
       const session = sessions.get(id)
       if (!session) return false
 
-      const matchesSearch = searchTerm === '' || 
-        session.url.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        session.id.includes(searchTerm)
+      const matchesSearch = normalizedSearchTerm === '' ||
+        session.id.includes(normalizedSearchTerm) ||
+        session.method.toLowerCase().includes(normalizedSearchTerm) ||
+        session.url.toLowerCase().includes(normalizedSearchTerm) ||
+        String(session.response.statusCode).includes(normalizedSearchTerm)
 
       const matchesMethod = methodFilters.size === 0 || 
         methodFilters.has(session.method.toUpperCase())
@@ -158,6 +161,13 @@ export function SessionGrid({
     return sorted
   }, [sessionOrder, sessions, searchTerm, methodFilters, sortField, sortDirection])
 
+  const hasActiveFilters = searchTerm !== '' || methodFilters.size > 0
+
+  const clearFilters = () => {
+    setSearchTerm('')
+    setMethodFilters(new Set())
+  }
+
   const getStatusCodeColor = (statusCode: number): string => {
     if (statusCode >= 200 && statusCode < 300) return 'text-emerald-600'
     if (statusCode >= 300 && statusCode < 400) return 'text-blue-600'
@@ -191,12 +201,21 @@ export function SessionGrid({
 
   return (
   <div className="h-full flex flex-col bg-white border-r border-neutral-200" data-testid="session-grid">
-      {/* Header with title + controls */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-neutral-200 bg-white">
-        <h2 className="text-[11px] font-semibold tracking-wide text-neutral-700 uppercase">
-          Sessions <span className="text-neutral-400">({sessionOrder.length})</span>
-        </h2>
-        <div className="ml-auto flex items-center gap-2 w-2/3">
+      <div className="border-b border-neutral-200 bg-white">
+        <div className="flex items-center gap-2 px-3 pt-2 pb-1">
+          <h2 className="text-[11px] font-semibold tracking-wide text-neutral-700 uppercase">
+            Sessions <span className="text-neutral-400">({sessionOrder.length})</span>
+          </h2>
+          <span
+            role="status"
+            aria-live="polite"
+            data-testid="filtered-count"
+            className="ml-auto text-[11px] text-neutral-500"
+          >
+            {filteredAndSortedSessions.length} matching
+          </span>
+        </div>
+        <div className="flex items-center gap-2 px-3 pb-2">
           <div className="relative flex-1">
             <Input
               placeholder="Search..."
@@ -232,6 +251,18 @@ export function SessionGrid({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+          {hasActiveFilters && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              aria-label="Clear filters"
+              onClick={clearFilters}
+              className="h-7 px-2 text-[11px] text-neutral-600 hover:bg-neutral-100 hover:text-neutral-800"
+            >
+              Clear filters
+            </Button>
+          )}
         </div>
       </div>
 
