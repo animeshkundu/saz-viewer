@@ -77,7 +77,7 @@ https://octocat.github.io/saz-viewer/
    ↓
 3. Workflow starts: Build job
    ├─ Checkout code
-   ├─ Setup Node.js 20
+   ├─ Setup Node.js 24
    ├─ Install dependencies (npm ci)
    ├─ Build with correct base path
    └─ Upload dist folder

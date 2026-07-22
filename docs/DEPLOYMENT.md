@@ -66,7 +66,7 @@ For example:
 
 1. **Build Job**:
    - Checks out your code
-   - Sets up Node.js 20
+   - Sets up Node.js 24
    - Installs dependencies (`npm ci`)
    - Builds the app with correct base path
    - Uploads the `dist` folder as an artifact
