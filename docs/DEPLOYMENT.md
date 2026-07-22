@@ -12,8 +12,9 @@ previews. Deployment starts only after the CI workflow succeeds for a push.
 
 Preview names are lowercase and characters outside `a-z`, `0-9`, `.`, `_`,
 and `-` become `-`. An eight-character hash of the original branch name keeps
-otherwise-colliding names distinct. For example, `feature/import-ui` is
-published at `test-feature-import-ui-7babe353/`.
+otherwise-colliding names distinct. Names with no supported characters use
+`branch` as the readable portion. For example, `feature/import-ui` is published
+at `test-feature-import-ui-7babe353/`.
 
 ## One-Time Repository Setup
 

@@ -26,7 +26,8 @@ production.
   `https://animeshkundu.github.io/saz-viewer/test-feature-import-ui-7babe353/`
 
 Branch names are lowercased. Runs of unsupported URL characters are replaced
-with `-`, and an eight-character hash preserves uniqueness.
+with `-`, names with no supported characters fall back to `branch`, and an
+eight-character hash preserves uniqueness.
 
 ## Verification
 

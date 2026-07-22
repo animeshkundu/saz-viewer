@@ -57,12 +57,7 @@ jobs:
               .replace(/[^a-z0-9._-]+/g, '-')
               .replace(/^-+|-+$/g, '');
 
-            if (!branchSlug) {
-              core.setFailed(
-                'Branch name does not contain any URL-safe characters.'
-              );
-              return;
-            }
+            const safeBranchSlug = branchSlug || 'branch';
 
             const { createHash } = await import('node:crypto');
             const branchHash = createHash('sha256')
@@ -72,7 +67,7 @@ jobs:
 
             core.setOutput(
               'destination_dir',
-              `test-${branchSlug}-${branchHash}`
+              `test-${safeBranchSlug}-${branchHash}`
             );
             core.setOutput('is_primary', 'false');
 
