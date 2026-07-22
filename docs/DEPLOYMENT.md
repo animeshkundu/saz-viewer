@@ -8,11 +8,12 @@ previews. Deployment starts only after the CI workflow succeeds for a push.
 | Source branch | Published path |
 |---|---|
 | `main` | `https://<owner>.github.io/<repository>/` |
-| Any non-main source branch | `https://<owner>.github.io/<repository>/test-{branch-name}/` |
+| Any non-main source branch | `https://<owner>.github.io/<repository>/test-{branch-name}-{hash}/` |
 
 Preview names are lowercase and characters outside `a-z`, `0-9`, `.`, `_`,
-and `-` become `-`. For example, `feature/import-ui` is published at
-`test-feature-import-ui/`.
+and `-` become `-`. An eight-character hash of the original branch name keeps
+otherwise-colliding names distinct. For example, `feature/import-ui` is
+published at `test-feature-import-ui-7babe353/`.
 
 ## One-Time Repository Setup
 
@@ -59,7 +60,7 @@ VITE_BASE_PATH=/saz-viewer/ npm run build
 To verify a branch preview build, include its target directory:
 
 ```bash
-VITE_BASE_PATH=/saz-viewer/test-feature-import-ui/ npm run build
+VITE_BASE_PATH=/saz-viewer/test-feature-import-ui-7babe353/ npm run build
 ```
 
 ## Troubleshooting

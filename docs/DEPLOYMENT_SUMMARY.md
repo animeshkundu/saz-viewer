@@ -4,7 +4,8 @@
 - `.github/workflows/deploy.yml` is the sole deployment workflow.
 - Deployment occurs only after successful push CI.
 - `main` publishes to `https://<owner>.github.io/<repository>/`.
-- Non-main branches publish to `test-{sanitized-branch-name}/`.
+- Non-main branches publish to
+  `test-{sanitized-branch-name}-{branch-hash}/`.
 - All sites coexist on the `gh-pages` branch.
 - GitHub Pages must use `gh-pages` and `/(root)` as its branch source.
 

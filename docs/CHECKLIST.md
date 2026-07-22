@@ -20,7 +20,8 @@
 ## Deployment Verification
 
 - [ ] A non-main branch push passes `CI/CD Pipeline`
-- [ ] `Deploy GitHub Pages` publishes its `test-{branch-name}` preview
+- [ ] `Deploy GitHub Pages` publishes its
+  `test-{branch-name}-{hash}` preview
 - [ ] Preview assets load without 404 responses
 - [ ] A merge to `main` passes CI and updates the primary site
 - [ ] The primary site and existing branch previews remain available

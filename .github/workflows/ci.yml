@@ -92,7 +92,8 @@ jobs:
             exit 1
           fi
 
-          destination_dir="test-$branch_slug"
+          branch_hash="$(printf '%s' "$BRANCH_NAME" | sha256sum | cut -c1-8)"
+          destination_dir="test-$branch_slug-$branch_hash"
           echo "base_path=/$REPOSITORY_NAME/$destination_dir/" >> "$GITHUB_OUTPUT"
           echo "destination_dir=$destination_dir" >> "$GITHUB_OUTPUT"
 

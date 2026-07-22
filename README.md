@@ -53,7 +53,7 @@ This project is configured to automatically deploy to GitHub Pages on every push
   succeed, `.github/workflows/deploy.yml` verifies the branch is current and
   publishes that artifact to its enforced destination.
 - `main` updates the primary site. Other branches publish to a lowercase,
-  sanitized `test-{branch-name}/` path.
+  sanitized `test-{branch-name}-{hash}/` path.
 
 ### Local Development
 
@@ -146,7 +146,7 @@ The project uses GitHub Actions for continuous integration and deployment:
 4. **Unit Tests** - Run with coverage requirements
 5. **E2E Tests** - Playwright browser tests
 6. **Deploy** - Publish `main` at the primary GitHub Pages URL and each
-   non-main branch at `test-{branch-name}/`
+   non-main branch at `test-{branch-name}-{hash}/`
 
 Deployments run only after all CI checks pass. See `.github/workflows/ci.yml`
 and `.github/workflows/deploy.yml` for details.

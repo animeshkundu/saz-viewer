@@ -55,8 +55,8 @@ commit is no longer the tip of the source branch.
 - `main` is built with `/<repository>/` as its base path and published at the
   root.
 - A non-main branch is built with
-  `/<repository>/test-{sanitized-branch-name}/` as its base path and published
-  to that directory.
+  `/<repository>/test-{sanitized-branch-name}-{branch-hash}/` as its base path
+  and published to that directory.
 - Deployment concurrency is serialized across branches with the full queue
   retained.
 - Pull-request workflow runs do not deploy; source-branch push runs do.
@@ -74,7 +74,6 @@ commit is no longer the tip of the source branch.
 
 - Pages must be configured to publish `gh-pages` from `/(root)`.
 - Preview directories remain until replaced or manually removed.
-- Sanitized branch names can theoretically collide.
 - Publishing uses the pinned `peaceiris/actions-gh-pages` action.
 
 ### Risks and Mitigation
@@ -84,6 +83,7 @@ commit is no longer the tip of the source branch.
 | Concurrent updates conflict | A shared Pages concurrency group serializes deployments. |
 | Branch code gains write access in the privileged workflow | CI creates the artifact; the publishing workflow does not execute branch code. |
 | A branch artifact overwrites another deployment | The publisher independently confines each non-main artifact to its derived preview directory. |
+| Sanitized branch names collide | A stable hash of the original branch name is included in every preview directory. |
 | An older run finishes after a newer commit | The publisher verifies the triggering SHA is still the branch tip. |
 | Action supply-chain changes | The action is pinned to a reviewed commit SHA. |
 | Incorrect asset paths | Each build receives its final deployment path through `VITE_BASE_PATH`. |

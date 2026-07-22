@@ -423,7 +423,8 @@ See `.github/workflows/`:
 - `ci.yml`: Runs linting, type checking, builds, coverage, and E2E tests on
   every source-branch push and on pull requests targeting `main`
 - `deploy.yml`: Runs after successful push CI, publishing `main` at the
-  primary Pages URL and non-main branches under `test-{branch-name}/`
+  primary Pages URL and non-main branches under
+  `test-{branch-name}-{hash}/`
 
 ## Scalability Considerations
 

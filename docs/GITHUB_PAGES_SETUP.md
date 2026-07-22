@@ -8,7 +8,8 @@
   successful push CI run.
 
 The primary site is built from `main`. Non-main branches are built under a
-sanitized `test-{branch-name}` directory so previews coexist with production.
+collision-safe `test-{branch-name}-{hash}` directory so previews coexist with
+production.
 
 ## Required Repository Settings
 
@@ -22,10 +23,10 @@ sanitized `test-{branch-name}` directory so previews coexist with production.
 
 - Primary: `https://animeshkundu.github.io/saz-viewer/`
 - Branch example: `feature/import-ui` becomes
-  `https://animeshkundu.github.io/saz-viewer/test-feature-import-ui/`
+  `https://animeshkundu.github.io/saz-viewer/test-feature-import-ui-7babe353/`
 
 Branch names are lowercased. Runs of unsupported URL characters are replaced
-with `-`.
+with `-`, and an eight-character hash preserves uniqueness.
 
 ## Verification
 
