@@ -69,9 +69,36 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set deployment target
+        id: target
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
+        run: |
+          if [ "$BRANCH_NAME" = "main" ]; then
+            echo "base_path=/$REPOSITORY_NAME/" >> "$GITHUB_OUTPUT"
+            echo "destination_dir=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          branch_slug="$(
+            printf '%s' "$BRANCH_NAME" |
+              tr '[:upper:]' '[:lower:]' |
+              sed -E 's/[^a-z0-9._-]+/-/g; s/^-+//; s/-+$//'
+          )"
+
+          if [ -z "$branch_slug" ]; then
+            echo "Branch name does not contain any URL-safe characters."
+            exit 1
+          fi
+
+          destination_dir="test-$branch_slug"
+          echo "base_path=/$REPOSITORY_NAME/$destination_dir/" >> "$GITHUB_OUTPUT"
+          echo "destination_dir=$destination_dir" >> "$GITHUB_OUTPUT"
+
       - name: Build
         env:
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_BASE_PATH: ${{ steps.target.outputs.base_path }}
         run: npm run build
 
       - name: Check build artifacts
@@ -84,12 +111,25 @@ jobs:
             exit 1
           fi
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - name: Prepare deployment artifact
+        env:
+          DESTINATION_DIR: ${{ steps.target.outputs.destination_dir }}
+        run: |
+          rm -rf pages-dist
+
+          if [ -z "$DESTINATION_DIR" ]; then
+            mv dist pages-dist
+          else
+            mkdir -p "pages-dist/$DESTINATION_DIR"
+            mv dist/. "pages-dist/$DESTINATION_DIR/"
+          fi
+
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: dist
-          path: dist/
-          retention-days: 7
+          name: pages-dist
+          path: pages-dist/
+          retention-days: 1
 
   unit-test:
     runs-on: ubuntu-latest

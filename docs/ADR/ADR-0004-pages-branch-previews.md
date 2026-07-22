@@ -47,6 +47,8 @@ directory while preserving the other deployments.
 Use `.github/workflows/deploy.yml` as the sole publisher. It runs after a
 successful push execution of `CI/CD Pipeline` and publishes through a
 persistent `gh-pages` branch. CI excludes that generated publishing branch.
+CI builds and packages the deployment artifact; the privileged publishing
+workflow neither checks out nor executes branch code.
 
 - `main` is built with `/<repository>/` as its base path and published at the
   root.
@@ -77,7 +79,7 @@ persistent `gh-pages` branch. CI excludes that generated publishing branch.
 | Risk | Mitigation |
 |---|---|
 | Concurrent updates conflict | A shared Pages concurrency group serializes deployments. |
-| Untrusted pull-request code gains write access | Only successful push runs trigger deployment. |
+| Branch code gains write access in the privileged workflow | CI creates the artifact; the publishing workflow does not execute branch code. |
 | Action supply-chain changes | The action is pinned to a reviewed commit SHA. |
 | Incorrect asset paths | Each build receives its final deployment path through `VITE_BASE_PATH`. |
 

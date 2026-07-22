@@ -12,74 +12,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.event == 'push'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    outputs:
-      destination_dir: ${{ steps.target.outputs.destination_dir }}
-      is_primary: ${{ steps.target.outputs.is_primary }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Set deployment target
-        id: target
-        env:
-          BRANCH_NAME: ${{ github.event.workflow_run.head_branch }}
-          REPOSITORY_NAME: ${{ github.event.repository.name }}
-        run: |
-          if [ "$BRANCH_NAME" = "main" ]; then
-            echo "base_path=/$REPOSITORY_NAME/" >> "$GITHUB_OUTPUT"
-            echo "destination_dir=" >> "$GITHUB_OUTPUT"
-            echo "is_primary=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          branch_slug="$(
-            printf '%s' "$BRANCH_NAME" |
-              tr '[:upper:]' '[:lower:]' |
-              sed -E 's/[^a-z0-9._-]+/-/g; s/^-+//; s/-+$//'
-          )"
-
-          if [ -z "$branch_slug" ]; then
-            echo "Branch name does not contain any URL-safe characters."
-            exit 1
-          fi
-
-          destination_dir="test-$branch_slug"
-          echo "base_path=/$REPOSITORY_NAME/$destination_dir/" >> "$GITHUB_OUTPUT"
-          echo "destination_dir=$destination_dir" >> "$GITHUB_OUTPUT"
-          echo "is_primary=false" >> "$GITHUB_OUTPUT"
-
-      - name: Build
-        env:
-          VITE_BASE_PATH: ${{ steps.target.outputs.base_path }}
-        run: npm run build
-
-      - name: Upload deployment artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: pages-dist
-          path: dist/
-          retention-days: 1
-
-  deploy:
-    needs: build
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -89,20 +25,13 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: pages-dist
-          path: dist/
+          path: pages-dist/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
 
-      - name: Deploy primary site
-        if: needs.build.outputs.is_primary == 'true'
+      - name: Publish site
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./pages-dist
           keep_files: true
-
-      - name: Deploy branch preview
-        if: needs.build.outputs.is_primary == 'false'
-        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          destination_dir: ${{ needs.build.outputs.destination_dir }}
